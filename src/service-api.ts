@@ -29,11 +29,20 @@ const plugin: FastifyPluginAsync = async (fastify) => {
     //   },
     // );
 
-    // get members
+    // get age categories
     fastify.get(
-      '/allcategories',
+      '/allcategories/age',
       async ({ member, log }) => {
         const task = taskManager.createGetAllTask(member);
+        return runner.runSingle(task, log);
+      },
+    );
+
+        // get discipline categories
+    fastify.get(
+      '/allcategories/discipline',
+      async ({ member, log }) => {
+        const task = taskManager.createGetAllDisciplinesTask(member);
         return runner.runSingle(task, log);
       },
     );

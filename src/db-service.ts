@@ -9,7 +9,7 @@ import { Category } from './interfaces/category';
 export class CategoryService {
 
   /**
-   * Get all categories
+   * Get all age categories
    */
   async getAll(
     dbHandler: TrxHandler,
@@ -20,6 +20,25 @@ export class CategoryService {
           sql`
         SELECT *
         FROM category_age
+      `,
+        )
+        // TODO: is there a better way?
+        .then(({ rows }) => rows.slice(0))
+    );
+  }
+
+  /**
+   * Get all displine categories
+   */
+   async getAllDisplines(
+    dbHandler: TrxHandler,
+  ): Promise<Category[]> {
+    return (
+      dbHandler
+        .query<Category>(
+          sql`
+        SELECT *
+        FROM category_discipline
       `,
         )
         // TODO: is there a better way?
