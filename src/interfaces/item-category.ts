@@ -4,13 +4,13 @@ export interface ItemCategory {
     categoryDiscipline?: string;
 }
 
-export class ItemCategoryDiscpline implements ItemCategory {
+export class ItemCategoryDiscipline implements ItemCategory {
     itemId: string;
-    categoryDiscpline: string;
+    categoryDiscipline: string;
   
-    constructor(itemId: string, category: string) {
+    constructor(itemId: string, categoryDiscipline: string) {
       this.itemId = itemId;
-      this.categoryDiscpline = category;
+      this.categoryDiscipline = categoryDiscipline;
     }
 }
 

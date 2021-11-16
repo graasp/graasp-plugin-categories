@@ -5,6 +5,7 @@ const get_category_task_1 = require("./tasks/get-category-task");
 const get_all_task_1 = require("./tasks/get-all-task");
 const get_discipline_category_task_1 = require("./tasks/get-discipline-category-task");
 const create_item_category_task_1 = require("./tasks/create-item-category-task");
+const create_item_category_discipline_task_1 = require("./tasks/create-item-category-discipline-task");
 class TaskManager {
     constructor(categoryService) {
         this.categoryService = categoryService;
@@ -15,7 +16,7 @@ class TaskManager {
     getGetAllTaskName() { return get_all_task_1.GetAllTask.name; }
     getGetAllDisciplinesTaskName() { return get_discipline_category_task_1.GetDisciplineCategoryTask.name; }
     createItemCategoryAgeTaskName() { return create_item_category_task_1.CreateItemCategoryAgeTask.name; }
-    createItemCategoryDisciplineTaskName() { return create_item_category_task_1.CreateItemCategoryDisciplineTask.name; }
+    createItemCategoryDisciplineTaskName() { return create_item_category_discipline_task_1.CreateItemCategoryDisciplineTask.name; }
     // Other
     // CRUD
     createGetTask(member, categoryId) {
@@ -31,7 +32,7 @@ class TaskManager {
         return new create_item_category_task_1.CreateItemCategoryAgeTask(member, data, itemId, this.itemService, this.categoryService);
     }
     createCreateItemCategoryDisciplineTask(member, data, itemId) {
-        return new create_item_category_task_1.CreateItemCategoryDisciplineTask(member, data, itemId, this.itemService, this.categoryService);
+        return new create_item_category_discipline_task_1.CreateItemCategoryDisciplineTask(member, data, itemId, this.itemService, this.categoryService);
     }
 }
 exports.TaskManager = TaskManager;

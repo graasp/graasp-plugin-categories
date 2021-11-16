@@ -6,8 +6,9 @@ import { GetCategoryTask } from './tasks/get-category-task';
 import { GetAllTask} from './tasks/get-all-task';
 import { CategoryTaskManager } from './interfaces/category-task-manager';
 import { GetDisciplineCategoryTask } from './tasks/get-discipline-category-task';
-import { CreateItemCategoryAgeTask, CreateItemCategoryDisciplineTask } from './tasks/create-item-category-task';
+import { CreateItemCategoryAgeTask } from './tasks/create-item-category-task';
 import { ItemCategory } from './interfaces/item-category';
+import { CreateItemCategoryDisciplineTask } from './tasks/create-item-category-discipline-task';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;

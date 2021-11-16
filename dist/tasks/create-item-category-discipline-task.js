@@ -9,26 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateItemCategoryAgeTask = void 0;
+exports.CreateItemCategoryDisciplineTask = void 0;
 const item_category_1 = require("../interfaces/item-category");
 const base_category_task_1 = require("./base-category-task");
-class CreateItemCategoryAgeTask extends base_category_task_1.BaseCategoryTask {
+class CreateItemCategoryDisciplineTask extends base_category_task_1.BaseCategoryTask {
     constructor(member, data, itemId, itemService, CategoryService) {
         super(member, CategoryService);
         this.itemService = itemService;
         this.data = data;
         this.targetId = itemId;
     }
-    get name() { return CreateItemCategoryAgeTask.name; }
+    get name() { return CreateItemCategoryDisciplineTask.name; }
     run(handler, log) {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
-            const categoryAge = this.data.categoryAge;
-            const itemCategoryAge = new item_category_1.ItemCategoryAge(this.targetId, categoryAge);
+            const category = this.data.categoryDiscipline;
+            const itemCategoryDiscipline = new item_category_1.ItemCategoryDiscipline(this.targetId, category);
             // create age category
-            this._result = yield this.categoryService.createAge(itemCategoryAge, handler);
+            this._result = yield this.categoryService.createDiscipline(itemCategoryDiscipline, handler);
             this.status = 'OK';
         });
     }
 }
-exports.CreateItemCategoryAgeTask = CreateItemCategoryAgeTask;
+exports.CreateItemCategoryDisciplineTask = CreateItemCategoryDisciplineTask;
