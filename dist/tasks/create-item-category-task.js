@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateItemCategoryAgeTask = void 0;
-const item_category_age_1 = require("../item-category-age");
+exports.CreateItemCategoryDisciplineTask = exports.CreateItemCategoryAgeTask = void 0;
+const item_category_1 = require("../interfaces/item-category");
 const base_category_task_1 = require("./base-category-task");
 class CreateItemCategoryAgeTask extends base_category_task_1.BaseCategoryTask {
     constructor(member, data, itemId, itemService, CategoryService) {
@@ -23,15 +23,32 @@ class CreateItemCategoryAgeTask extends base_category_task_1.BaseCategoryTask {
     run(handler, log) {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
-            // get item that the new flag will target
-            //const item = await this.itemService.get(this.targetId, handler);
-            // if (!item) throw new ItemNotFound(this.targetId);
             const categoryAge = this.data.categoryAge;
-            const itemCategoryAge = new item_category_age_1.ItemCategoryAge(this.targetId, categoryAge);
-            // create flag
-            this._result = yield this.categoryService.create(itemCategoryAge, handler);
+            const itemCategoryAge = new item_category_1.ItemCategoryAge(this.targetId, categoryAge);
+            // create age category
+            this._result = yield this.categoryService.createAge(itemCategoryAge, handler);
             this.status = 'OK';
         });
     }
 }
 exports.CreateItemCategoryAgeTask = CreateItemCategoryAgeTask;
+class CreateItemCategoryDisciplineTask extends base_category_task_1.BaseCategoryTask {
+    constructor(member, data, itemId, itemService, CategoryService) {
+        super(member, CategoryService);
+        this.itemService = itemService;
+        this.data = data;
+        this.targetId = itemId;
+    }
+    get name() { return CreateItemCategoryAgeTask.name; }
+    run(handler, log) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.status = 'RUNNING';
+            const category = this.data.categoryDiscipline;
+            const itemCategoryDiscpline = new item_category_1.ItemCategoryDiscpline(this.targetId, category);
+            // create age category
+            this._result = yield this.categoryService.createDiscipline(itemCategoryDiscpline, handler);
+            this.status = 'OK';
+        });
+    }
+}
+exports.CreateItemCategoryDisciplineTask = CreateItemCategoryDisciplineTask;

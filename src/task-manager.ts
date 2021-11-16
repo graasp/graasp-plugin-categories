@@ -6,7 +6,7 @@ import { GetCategoryTask } from './tasks/get-category-task';
 import { GetAllTask} from './tasks/get-all-task';
 import { CategoryTaskManager } from './interfaces/category-task-manager';
 import { GetDisciplineCategoryTask } from './tasks/get-discipline-category-task';
-import { CreateItemCategoryAgeTask } from './tasks/create-item-category-task';
+import { CreateItemCategoryAgeTask, CreateItemCategoryDisciplineTask } from './tasks/create-item-category-task';
 import { ItemCategory } from './interfaces/item-category';
 
 export class TaskManager implements CategoryTaskManager {
@@ -23,6 +23,7 @@ export class TaskManager implements CategoryTaskManager {
   getGetAllTaskName(): string { return GetAllTask.name;}
   getGetAllDisciplinesTaskName(): string { return GetDisciplineCategoryTask.name; }
   createItemCategoryAgeTaskName(): string { return CreateItemCategoryAgeTask.name; }
+  createItemCategoryDisciplineTaskName(): string { return CreateItemCategoryDisciplineTask.name; }
   
 
   // Other
@@ -42,6 +43,10 @@ export class TaskManager implements CategoryTaskManager {
 
   createCreateItemCategoryAgeTask(member: Member, data: Partial<ItemCategory>, itemId: string): CreateItemCategoryAgeTask{
     return new CreateItemCategoryAgeTask(member, data, itemId, this.itemService, this.categoryService)
+  }
+
+  createCreateItemCategoryDisciplineTask(member: Member, data: Partial<ItemCategory>, itemId: string): CreateItemCategoryDisciplineTask{
+    return new CreateItemCategoryDisciplineTask(member, data, itemId, this.itemService, this.categoryService)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

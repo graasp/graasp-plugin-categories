@@ -63,5 +63,9 @@ const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createCreateItemCategoryAgeTask(member, body, itemId);
         return runner.runSingle(task, log);
     }));
+    fastify.post('/category/:itemId/discipline', { schema: schemas_1.create }, ({ member, params: { itemId }, body, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createCreateItemCategoryDisciplineTask(member, body, itemId);
+        return runner.runSingle(task, log);
+    }));
 });
 exports.default = plugin;

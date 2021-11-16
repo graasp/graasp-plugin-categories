@@ -60,7 +60,7 @@ class CategoryService {
                 .then(({ rows }) => rows[0] || null);
         });
     }
-    create(itemCategory, transactionHandler) {
+    createAge(itemCategory, transactionHandler) {
         return __awaiter(this, void 0, void 0, function* () {
             const { itemId, categoryAge } = itemCategory;
             return transactionHandler.query((0, slonik_1.sql) `
@@ -69,6 +69,20 @@ class CategoryService {
         ON CONFLICT (item_id)
         DO
         UPDATE SET category_age = ${categoryAge}
+        RETURNING item_id, category_age, category_discipline
+      `)
+                .then(({ rows }) => rows[0]);
+        });
+    }
+    createDiscipline(itemCategory, transactionHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { itemId, categoryDiscipline } = itemCategory;
+            return transactionHandler.query((0, slonik_1.sql) `
+        INSERT INTO item_category (item_id, category_discipline)
+        VALUES (${itemId}, ${categoryDiscipline})
+        ON CONFLICT (item_id)
+        DO
+        UPDATE SET category_age = ${categoryDiscipline}
         RETURNING item_id, category_age, category_discipline
       `)
                 .then(({ rows }) => rows[0]);

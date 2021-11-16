@@ -54,7 +54,15 @@ const plugin: FastifyPluginAsync = async (fastify) => {
         const task = taskManager.createCreateItemCategoryAgeTask(member, body, itemId);
         return runner.runSingle(task, log);
       },
-    );    
+    );  
+    
+    fastify.post<{ Params: { itemId: string }; Body: Partial<ItemCategory> }>(
+      '/category/:itemId/discipline', { schema: create },
+      async ({ member, params: { itemId }, body, log }) => {
+        const task = taskManager.createCreateItemCategoryDisciplineTask(member, body, itemId);
+        return runner.runSingle(task, log);
+      },
+    );      
 };
 
 export default plugin;

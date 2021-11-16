@@ -68,7 +68,7 @@ export class CategoryService {
       .then(({ rows }) => rows[0] || null);
   }
 
-  async create(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {
+  async createAge(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {
     const { itemId, categoryAge } = itemCategory;
     return transactionHandler.query<ItemCategory>(sql`
         INSERT INTO item_category (item_id, category_age)
@@ -76,6 +76,19 @@ export class CategoryService {
         ON CONFLICT (item_id)
         DO
         UPDATE SET category_age = ${categoryAge}
+        RETURNING item_id, category_age, category_discipline
+      `)
+      .then(({ rows }) => rows[0]);
+  }
+
+  async createDiscipline(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {
+    const { itemId, categoryDiscipline } = itemCategory;
+    return transactionHandler.query<ItemCategory>(sql`
+        INSERT INTO item_category (item_id, category_discipline)
+        VALUES (${itemId}, ${categoryDiscipline})
+        ON CONFLICT (item_id)
+        DO
+        UPDATE SET category_age = ${categoryDiscipline}
         RETURNING item_id, category_age, category_discipline
       `)
       .then(({ rows }) => rows[0]);
