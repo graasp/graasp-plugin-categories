@@ -3,7 +3,8 @@ import { FastifyPluginAsync } from 'fastify';
 
 // local
 import { CategoryService } from './db-service';
-import common from './schemas';
+import { ItemCategory } from './interfaces/item-category';
+import common, { create } from './schemas';
 import { TaskManager } from './task-manager';
 
 const plugin: FastifyPluginAsync = async (fastify) => {
@@ -46,6 +47,14 @@ const plugin: FastifyPluginAsync = async (fastify) => {
         return runner.runSingle(task, log);
       },
     );
+
+    fastify.post<{ Params: { itemId: string }; Body: Partial<ItemCategory> }>(
+      '/:itemId/age', { schema: create },
+      async ({ member, params: { itemId }, body, log }) => {
+        const task = taskManager.createCreateItemCategoryAgeTask(member, body, itemId);
+        return runner.runSingle(task, log);
+      },
+    );    
 };
 
 export default plugin;
