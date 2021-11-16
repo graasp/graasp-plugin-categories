@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateItemCategoryDisciplineTask = void 0;
-const item_category_1 = require("../interfaces/item-category");
+const item_category_discipline_1 = require("../interfaces/item-category-discipline");
 const base_category_task_1 = require("./base-category-task");
 class CreateItemCategoryDisciplineTask extends base_category_task_1.BaseCategoryTask {
     constructor(member, data, itemId, itemService, CategoryService) {
@@ -24,7 +24,7 @@ class CreateItemCategoryDisciplineTask extends base_category_task_1.BaseCategory
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
             const category = this.data.categoryDiscipline;
-            const itemCategoryDiscipline = new item_category_1.ItemCategoryDiscipline(this.targetId, category);
+            const itemCategoryDiscipline = new item_category_discipline_1.ItemCategoryDiscipline(this.targetId, category);
             // create age category
             this._result = yield this.categoryService.createDiscipline(itemCategoryDiscipline, handler);
             this.status = 'OK';

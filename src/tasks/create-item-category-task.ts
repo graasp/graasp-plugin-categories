@@ -5,7 +5,8 @@ import { DatabaseTransactionHandler} from 'graasp';
 import { Member, ItemService } from 'graasp';
 // local
 import { CategoryService } from '../db-service';
-import { ItemCategory, ItemCategoryAge } from '../interfaces/item-category';
+import { ItemCategory } from '../interfaces/item-category';
+import { ItemCategoryAge } from '../interfaces/item-category-age';
 import { BaseCategoryTask } from './base-category-task';
 
 export class CreateItemCategoryAgeTask extends BaseCategoryTask<ItemCategory> {
