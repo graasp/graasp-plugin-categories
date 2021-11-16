@@ -17,7 +17,7 @@ const slonik_1 = require("slonik");
  */
 class CategoryService {
     /**
-     * Get all categories
+     * Get all age categories
      */
     getAll(dbHandler) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,19 +31,47 @@ class CategoryService {
         });
     }
     /**
+     * Get all displine categories
+     */
+    getAllDisplines(dbHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (dbHandler
+                .query((0, slonik_1.sql) `
+        SELECT *
+        FROM category_discipline
+      `)
+                // TODO: is there a better way?
+                .then(({ rows }) => rows.slice(0)));
+        });
+    }
+    /**
      * Get Category matching the given `id` or `null`, if not found.
      * @param id Category's id
      * @param dbHandler Database handler
      */
-    get(id, dbHandler) {
+    get(id, table_name, dbHandler) {
         return __awaiter(this, void 0, void 0, function* () {
             return dbHandler
                 .query((0, slonik_1.sql) `
         SELECT *
-        FROM category_age
+        FROM ${table_name}
         WHERE id = ${id}
       `)
                 .then(({ rows }) => rows[0] || null);
+        });
+    }
+    create(itemCategory, transactionHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { itemId, categoryAge } = itemCategory;
+            return transactionHandler.query((0, slonik_1.sql) `
+        INSERT INTO item_category (item_id, category_age)
+        VALUES (${itemId}, ${categoryAge})
+        ON CONFLICT (item_id)
+        DO
+        UPDATE SET category_age = ${categoryAge}
+        RETURNING item_id, category_age, category_discipline
+      `)
+                .then(({ rows }) => rows[0]);
         });
     }
 }

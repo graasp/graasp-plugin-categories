@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,13 +27,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 // local
 const db_service_1 = require("./db-service");
-const schemas_1 = __importDefault(require("./schemas"));
+const schemas_1 = __importStar(require("./schemas"));
 const task_manager_1 = require("./task-manager");
 const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
     const { taskRunner: runner } = fastify;
@@ -33,9 +49,18 @@ const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
     //     return runner.runSingle(task, log);
     //   },
     // );
-    // get members
-    fastify.get('/allcategories', ({ member, log }) => __awaiter(void 0, void 0, void 0, function* () {
+    // get age categories
+    fastify.get('/allcategories/age', ({ member, log }) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createGetAllTask(member);
+        return runner.runSingle(task, log);
+    }));
+    // get discipline categories
+    fastify.get('/allcategories/discipline', ({ member, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createGetAllDisciplinesTask(member);
+        return runner.runSingle(task, log);
+    }));
+    fastify.post('/category/:itemId/age', { schema: schemas_1.create }, ({ member, params: { itemId }, body, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createCreateItemCategoryAgeTask(member, body, itemId);
         return runner.runSingle(task, log);
     }));
 });

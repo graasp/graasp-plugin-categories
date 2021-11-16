@@ -9,27 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetCategoryTask = void 0;
+exports.GetDisciplineCategoryTask = void 0;
 const base_category_task_1 = require("./base-category-task");
-class GetCategoryTask extends base_category_task_1.BaseCategoryTask {
-    constructor(member, categoryService, input) {
-        super(member, categoryService);
-        this.input = input !== null && input !== void 0 ? input : {};
-    }
+class GetDisciplineCategoryTask extends base_category_task_1.BaseCategoryTask {
     get name() {
-        return GetCategoryTask.name;
+        return GetDisciplineCategoryTask.name;
+    }
+    constructor(member, categoryService) {
+        super(member, categoryService);
     }
     run(handler) {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
-            const { categoryId, tableName } = this.input;
-            this.targetId = categoryId;
             // get Category
-            const category = yield this.categoryService.get(categoryId, tableName, handler);
+            const allCategories = yield this.categoryService.getAllDisplines(handler);
             //if (!category) throw new CategoryNotFound(categoryId);
             this.status = 'OK';
-            this._result = category;
+            this._result = allCategories;
         });
     }
 }
-exports.GetCategoryTask = GetCategoryTask;
+exports.GetDisciplineCategoryTask = GetDisciplineCategoryTask;
