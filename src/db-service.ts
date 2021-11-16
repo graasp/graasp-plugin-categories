@@ -88,7 +88,7 @@ export class CategoryService {
         VALUES (${itemId}, ${categoryDiscipline})
         ON CONFLICT (item_id)
         DO
-        UPDATE SET category_age = ${categoryDiscipline}
+        UPDATE SET category_discipline = ${categoryDiscipline}
         RETURNING item_id, category_age, category_discipline
       `)
       .then(({ rows }) => rows[0]);

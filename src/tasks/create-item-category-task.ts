@@ -50,10 +50,10 @@ export class CreateItemCategoryDisciplineTask extends BaseCategoryTask<ItemCateg
 
     const category = this.data.categoryDiscipline;
 
-    const itemCategoryDiscpline = new ItemCategoryDiscpline(this.targetId, category);
+    const itemCategoryDiscipline = new ItemCategoryDiscpline(this.targetId, category);
 
     // create age category
-    this._result = await this.categoryService.createDiscipline(itemCategoryDiscpline, handler);
+    this._result = await this.categoryService.createDiscipline(itemCategoryDiscipline, handler);
     this.status = 'OK';
   }
 }

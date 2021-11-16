@@ -44,9 +44,9 @@ class CreateItemCategoryDisciplineTask extends base_category_task_1.BaseCategory
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
             const category = this.data.categoryDiscipline;
-            const itemCategoryDiscpline = new item_category_1.ItemCategoryDiscpline(this.targetId, category);
+            const itemCategoryDiscipline = new item_category_1.ItemCategoryDiscpline(this.targetId, category);
             // create age category
-            this._result = yield this.categoryService.createDiscipline(itemCategoryDiscpline, handler);
+            this._result = yield this.categoryService.createDiscipline(itemCategoryDiscipline, handler);
             this.status = 'OK';
         });
     }
