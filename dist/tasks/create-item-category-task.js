@@ -24,10 +24,10 @@ class CreateItemCategoryAgeTask extends base_category_task_1.BaseCategoryTask {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
             // get item that the new flag will target
-            const item = yield this.itemService.get(this.targetId, handler);
+            //const item = await this.itemService.get(this.targetId, handler);
             // if (!item) throw new ItemNotFound(this.targetId);
             const categoryAge = this.data.categoryAge;
-            const itemCategoryAge = new item_category_age_1.ItemCategoryAge(item.id, categoryAge);
+            const itemCategoryAge = new item_category_age_1.ItemCategoryAge(this.targetId, categoryAge);
             // create flag
             this._result = yield this.categoryService.create(itemCategoryAge, handler);
             this.status = 'OK';
