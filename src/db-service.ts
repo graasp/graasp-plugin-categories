@@ -53,7 +53,7 @@ export class CategoryService {
    * @param dbHandler Database handler
    */
   async get(
-    id: string,
+    id: number,
     table_name: string,
     dbHandler: TrxHandler,
   ): Promise<Category> {

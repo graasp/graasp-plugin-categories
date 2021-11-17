@@ -4,7 +4,7 @@ import { FastifyPluginAsync } from 'fastify';
 // local
 import { CategoryService } from './db-service';
 import { ItemCategory } from './interfaces/item-category';
-import common, { create } from './schemas';
+import common, { create, getOne } from './schemas';
 import { TaskManager } from './task-manager';
 
 const plugin: FastifyPluginAsync = async (fastify) => {
@@ -20,15 +20,15 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   // get current user
   fastify.get('/current', async ({ member }) => member);
 
-    // // get member
-    // fastify.get(
-    //   '/:id',
-    //   { schema: getOne },
-    //   async ({ category, id , log }) => {
-    //     const task = taskManager.createGetTask(category, id);
-    //     return runner.runSingle(task, log);
-    //   },
-    // );
+    // get category name
+    fastify.get<{ Params: {categoryId: string };}>(
+      '/category/age/:categoryId',
+      { schema: getOne },
+      async ({ member, params: {categoryId}, log }) => {
+        const task = taskManager.createGetTask(member, categoryId);
+        return runner.runSingle(task, log);
+      },
+    );
 
     // get age categories
     fastify.get(

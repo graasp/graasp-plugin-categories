@@ -40,15 +40,11 @@ const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
     fastify.addSchema(schemas_1.default);
     // get current user
     fastify.get('/current', ({ member }) => __awaiter(void 0, void 0, void 0, function* () { return member; }));
-    // // get member
-    // fastify.get(
-    //   '/:id',
-    //   { schema: getOne },
-    //   async ({ category, id , log }) => {
-    //     const task = taskManager.createGetTask(category, id);
-    //     return runner.runSingle(task, log);
-    //   },
-    // );
+    // get category name
+    fastify.get('/category/age/:categoryId', { schema: schemas_1.getOne }, ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createGetTask(member, categoryId);
+        return runner.runSingle(task, log);
+    }));
     // get age categories
     fastify.get('/allcategories/age', ({ member, log }) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createGetAllTask(member);

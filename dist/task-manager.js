@@ -20,7 +20,7 @@ class TaskManager {
     // Other
     // CRUD
     createGetTask(member, categoryId) {
-        return new get_category_task_1.GetCategoryTask(member, this.categoryService, { categoryId });
+        return new get_category_task_1.GetCategoryTask(member, this.categoryService, categoryId);
     }
     createGetAllTask(member) {
         return new get_all_task_1.GetAllTask(member, this.categoryService);

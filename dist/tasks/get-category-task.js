@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetCategoryTask = void 0;
 const base_category_task_1 = require("./base-category-task");
 class GetCategoryTask extends base_category_task_1.BaseCategoryTask {
-    constructor(member, categoryService, input) {
+    constructor(member, categoryService, categoryId) {
         super(member, categoryService);
-        this.input = input !== null && input !== void 0 ? input : {};
+        this.categoryId = Number(categoryId);
     }
     get name() {
         return GetCategoryTask.name;
@@ -22,10 +22,9 @@ class GetCategoryTask extends base_category_task_1.BaseCategoryTask {
     run(handler) {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
-            const { categoryId, tableName } = this.input;
-            this.targetId = categoryId;
             // get Category
-            const category = yield this.categoryService.get(categoryId, tableName, handler);
+            const table_name = "category_age";
+            const category = yield this.categoryService.get(this.categoryId, table_name, handler);
             //if (!category) throw new CategoryNotFound(categoryId);
             this.status = 'OK';
             this._result = category;

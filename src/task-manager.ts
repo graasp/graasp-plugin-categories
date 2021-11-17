@@ -31,7 +31,7 @@ export class TaskManager implements CategoryTaskManager {
 
   // CRUD
   createGetTask(member: Member, categoryId: string): GetCategoryTask {
-    return new GetCategoryTask(member, this.categoryService, { categoryId });
+    return new GetCategoryTask(member, this.categoryService, categoryId);
   }
 
   createGetAllTask(member: Member): GetAllTask {
