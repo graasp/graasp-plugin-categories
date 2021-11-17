@@ -49,15 +49,48 @@ class CategoryService {
      * @param id Category's id
      * @param dbHandler Database handler
      */
-    get(id, table_name, dbHandler) {
+    get(id, dbHandler) {
         return __awaiter(this, void 0, void 0, function* () {
-            return dbHandler
+            return (dbHandler
                 .query((0, slonik_1.sql) `
         SELECT *
-        FROM ${table_name}
+        FROM category_age
         WHERE id = ${id}
-      `)
-                .then(({ rows }) => rows[0] || null);
+        `)
+                .then(({ rows }) => rows[0] || null));
+        });
+    }
+    getCategoryDisc(id, dbHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (dbHandler
+                .query((0, slonik_1.sql) `
+        SELECT *
+        FROM category_discipline
+        WHERE id = ${id}
+        `)
+                .then(({ rows }) => rows[0] || null));
+        });
+    }
+    getItemByDiscipline(id, dbHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (dbHandler
+                .query((0, slonik_1.sql) `
+        SELECT *
+        FROM item_category
+        WHERE category_discipline = ${id}
+        `)
+                .then(({ rows }) => rows.slice(0)));
+        });
+    }
+    getItemByAge(id, dbHandler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (dbHandler
+                .query((0, slonik_1.sql) `
+        SELECT *
+        FROM item_category
+        WHERE category_age = ${id}
+        `)
+                .then(({ rows }) => rows.slice(0)));
         });
     }
     createAge(itemCategory, transactionHandler) {

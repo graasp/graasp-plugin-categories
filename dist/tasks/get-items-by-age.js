@@ -9,27 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetCategoryTask = void 0;
+exports.GetItemsByAge = void 0;
 const base_category_task_1 = require("./base-category-task");
-class GetCategoryTask extends base_category_task_1.BaseCategoryTask {
+class GetItemsByAge extends base_category_task_1.BaseCategoryTask {
     constructor(member, categoryId, categoryService) {
         super(member, categoryService);
-        this.categoryId = Number(categoryId);
+        this.categoryId = categoryId;
     }
     get name() {
-        return GetCategoryTask.name;
+        return GetItemsByAge.name;
     }
     run(handler) {
         return __awaiter(this, void 0, void 0, function* () {
             this.status = 'RUNNING';
             // get Category (age)
-            console.log("Calling db service");
-            const category = yield this.categoryService.get(this.categoryId, handler);
+            const itemcategory = yield this.categoryService.getItemByAge(this.categoryId, handler);
             //if (!category) throw new CategoryNotFound(categoryId);
-            console.log(category.id, category.name);
+            //console.log(category.id, category.name);
             this.status = 'OK';
-            this._result = category;
+            this._result = itemcategory;
         });
     }
 }
-exports.GetCategoryTask = GetCategoryTask;
+exports.GetItemsByAge = GetItemsByAge;

@@ -54,18 +54,70 @@ export class CategoryService {
    */
   async get(
     id: number,
-    table_name: string,
     dbHandler: TrxHandler,
   ): Promise<Category> {
-
-    return dbHandler
-      .query<Category>(
-        sql`
+    return (
+      dbHandler
+        .query<Category>(
+          sql`
         SELECT *
-        FROM ${table_name}
+        FROM category_age
         WHERE id = ${id}
-      `)
-      .then(({ rows }) => rows[0] || null);
+        `,
+          )
+        .then(({ rows }) => rows[0] || null)
+    );
+  }
+
+  async getCategoryDisc(
+    id: number,
+    dbHandler: TrxHandler,
+  ): Promise<Category> {
+    return (
+      dbHandler
+        .query<Category>(
+          sql`
+        SELECT *
+        FROM category_discipline
+        WHERE id = ${id}
+        `,
+          )
+        .then(({ rows }) => rows[0] || null)
+    );
+  }
+
+  async getItemByDiscipline(
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<ItemCategory[]> {
+    return (
+      dbHandler
+        .query<ItemCategory>(
+          sql`
+        SELECT *
+        FROM item_category
+        WHERE category_discipline = ${id}
+        `,
+          )
+        .then(({ rows }) => rows.slice(0))
+    );
+  }
+
+  async getItemByAge(
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<ItemCategory[]> {
+    return (
+      dbHandler
+        .query<ItemCategory>(
+          sql`
+        SELECT *
+        FROM item_category
+        WHERE category_age = ${id}
+        `,
+          )
+        .then(({ rows }) => rows.slice(0))
+    );
   }
 
   async createAge(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {

@@ -40,9 +40,14 @@ const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
     fastify.addSchema(schemas_1.default);
     // get current user
     fastify.get('/current', ({ member }) => __awaiter(void 0, void 0, void 0, function* () { return member; }));
-    // get category name
-    fastify.get('/category/age/:categoryId', { schema: schemas_1.getOne }, ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
+    // get category name (age group)
+    fastify.get('/category/age/:categoryId', ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createGetTask(member, categoryId);
+        return runner.runSingle(task, log);
+    }));
+    //get category (discipline)
+    fastify.get('/category/discipline/:categoryId', ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createGetCategoryDiscTask(member, categoryId);
         return runner.runSingle(task, log);
     }));
     // get age categories
@@ -55,10 +60,22 @@ const plugin = (fastify) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createGetAllDisciplinesTask(member);
         return runner.runSingle(task, log);
     }));
+    // get items in one category (age)
+    fastify.get('/age/:categoryId', ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createGetItemsByAge(member, categoryId);
+        return runner.runSingle(task, log);
+    }));
+    //get category (discipline)
+    fastify.get('/discipline/:categoryId', ({ member, params: { categoryId }, log }) => __awaiter(void 0, void 0, void 0, function* () {
+        const task = taskManager.createGetItemsByDisc(member, categoryId);
+        return runner.runSingle(task, log);
+    }));
+    // create/update age group for item
     fastify.post('/category/:itemId/age', { schema: schemas_1.create }, ({ member, params: { itemId }, body, log }) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createCreateItemCategoryAgeTask(member, body, itemId);
         return runner.runSingle(task, log);
     }));
+    //create/update discipline for item
     fastify.post('/category/:itemId/discipline', { schema: schemas_1.create }, ({ member, params: { itemId }, body, log }) => __awaiter(void 0, void 0, void 0, function* () {
         const task = taskManager.createCreateItemCategoryDisciplineTask(member, body, itemId);
         return runner.runSingle(task, log);

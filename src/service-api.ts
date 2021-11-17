@@ -20,12 +20,20 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   // get current user
   fastify.get('/current', async ({ member }) => member);
 
-    // get category name
+    // get category name (age group)
     fastify.get<{ Params: {categoryId: string };}>(
       '/category/age/:categoryId',
-      { schema: getOne },
       async ({ member, params: {categoryId}, log }) => {
         const task = taskManager.createGetTask(member, categoryId);
+        return runner.runSingle(task, log);
+      },
+    );
+
+    //get category (discipline)
+    fastify.get<{ Params: {categoryId: string };}>(
+      '/category/discipline/:categoryId',
+      async ({ member, params: {categoryId}, log }) => {
+        const task = taskManager.createGetCategoryDiscTask(member, categoryId);
         return runner.runSingle(task, log);
       },
     );
@@ -48,6 +56,25 @@ const plugin: FastifyPluginAsync = async (fastify) => {
       },
     );
 
+    // get items in one category (age)
+    fastify.get<{ Params: {categoryId: string };}>(
+      '/age/:categoryId',
+      async ({ member, params: {categoryId}, log }) => {
+        const task = taskManager.createGetItemsByAge(member, categoryId);
+        return runner.runSingle(task, log);
+      },
+    );
+
+    //get category (discipline)
+    fastify.get<{ Params: {categoryId: string };}>(
+      '/discipline/:categoryId',
+      async ({ member, params: {categoryId}, log }) => {
+        const task = taskManager.createGetItemsByDisc(member, categoryId);
+        return runner.runSingle(task, log);
+      },
+    );
+
+      // create/update age group for item
     fastify.post<{ Params: { itemId: string }; Body: Partial<ItemCategory> }>(
       '/category/:itemId/age', { schema: create },
       async ({ member, params: { itemId }, body, log }) => {
@@ -56,6 +83,7 @@ const plugin: FastifyPluginAsync = async (fastify) => {
       },
     );  
     
+    //create/update discipline for item
     fastify.post<{ Params: { itemId: string }; Body: Partial<ItemCategory> }>(
       '/category/:itemId/discipline', { schema: create },
       async ({ member, params: { itemId }, body, log }) => {
