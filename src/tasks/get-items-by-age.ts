@@ -21,8 +21,6 @@ export class GetItemsByAge extends BaseCategoryTask<ItemCategory[]> {
 
     // get Category (age)
     const itemcategory = await this.categoryService.getItemByAge(this.categoryId, handler);
-    //if (!category) throw new CategoryNotFound(categoryId);
-    //console.log(category.id, category.name);
 
     this.status = 'OK';
     this._result = itemcategory;

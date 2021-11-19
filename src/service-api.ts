@@ -40,7 +40,7 @@ const plugin: FastifyPluginAsync = async (fastify) => {
 
     // get age categories
     fastify.get(
-      '/allcategories/age',
+      '/categories/age',
       async ({ member, log }) => {
         const task = taskManager.createGetAllTask(member);
         return runner.runSingle(task, log);
@@ -49,7 +49,7 @@ const plugin: FastifyPluginAsync = async (fastify) => {
 
         // get discipline categories
     fastify.get(
-      '/allcategories/discipline',
+      '/categories/discipline',
       async ({ member, log }) => {
         const task = taskManager.createGetAllDisciplinesTask(member);
         return runner.runSingle(task, log);

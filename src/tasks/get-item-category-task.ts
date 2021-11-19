@@ -1,5 +1,4 @@
 // global
-// TOCHANGE import { CategoryNotFound } from '../../../util/graasp-error';
 import { DatabaseTransactionHandler, Member } from 'graasp'
 // local
 import { CategoryService } from '../db-service';
@@ -20,7 +19,6 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    console.log("Calling db service");
     const itemCategory = await this.categoryService.getItemCategory(this.itemId, handler);
 
     this.status = 'OK';
