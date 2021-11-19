@@ -12,6 +12,7 @@ import { CreateItemCategoryDisciplineTask } from './tasks/create-item-category-d
 import { GetCategoryDiscTask } from './tasks/get-discipline-task';
 import { GetItemsByAge } from './tasks/get-items-by-age';
 import { GetItemsByDiscipline } from './tasks/get-items-by-discipline';
+import { GetItemCategoryTask } from './tasks/get-item-category-task';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
@@ -29,6 +30,7 @@ export class TaskManager implements CategoryTaskManager {
   getGetAllDisciplinesTaskName(): string { return GetDisciplineCategoryTask.name; }
   getGetItemsByAgeName(): string { return GetItemsByAge.name; }
   getGetItemsByDiscName(): string { return GetItemsByDiscipline.name; }
+  getGetItemCategoryTaskName(): string { return GetItemCategoryTask.name; }
   createItemCategoryAgeTaskName(): string { return CreateItemCategoryAgeTask.name; }
   createItemCategoryDisciplineTaskName(): string { return CreateItemCategoryDisciplineTask.name; }
   
@@ -60,6 +62,10 @@ export class TaskManager implements CategoryTaskManager {
     return new GetItemsByDiscipline(member, categoryId, this.categoryService);
   }
 
+  createGetItemCategoryTask(member: Member, itemId: string): GetItemCategoryTask {
+    return new GetItemCategoryTask(member, itemId, this.categoryService);
+  }
+  
   createCreateItemCategoryAgeTask(member: Member, data: Partial<ItemCategory>, itemId: string): CreateItemCategoryAgeTask{
     return new CreateItemCategoryAgeTask(member, data, itemId, this.itemService, this.categoryService)
   }

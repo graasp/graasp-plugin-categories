@@ -86,6 +86,28 @@ export class CategoryService {
     );
   }
 
+  /**
+   * Get itemCategory matching the given `itemid` or `null`, if not found.
+   * @param id item's id
+   * @param dbHandler Database handler
+   */
+   async getItemCategory(
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<ItemCategory> {
+    return (
+      dbHandler
+        .query<ItemCategory>(
+          sql`
+        SELECT *
+        FROM item_category
+        WHERE item_id = ${id}
+        `,
+          )
+        .then(({ rows }) => rows[0] || null)
+    );
+  }
+
   async getItemByDiscipline(
     id: string,
     dbHandler: TrxHandler,

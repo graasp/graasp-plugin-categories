@@ -74,6 +74,15 @@ const plugin: FastifyPluginAsync = async (fastify) => {
       },
     );
 
+    //get category of an item
+    fastify.get<{ Params: {itemId: string };}>(
+      '/:itemId/category',
+      async ({ member, params: {itemId}, log }) => {
+        const task = taskManager.createGetItemCategoryTask(member, itemId);
+        return runner.runSingle(task, log);
+      },
+    );
+
       // create/update age group for item
     fastify.post<{ Params: { itemId: string }; Body: Partial<ItemCategory> }>(
       '/category/:itemId/age', { schema: create },
