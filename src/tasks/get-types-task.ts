@@ -1,13 +1,13 @@
 // global
-import { Member, DatabaseTransactionHandler } from 'graasp';
+import { DatabaseTransactionHandler, Member } from 'graasp'
 // local
 import { CategoryService } from '../db-service';
+import { CategoryType } from '../interfaces/category-type';
 import { BaseCategoryTask } from './base-category-task';
-import { Category } from '../interfaces/category';
 
-export class GetDisciplineCategoriesTask extends BaseCategoryTask<Category[]> {
+export class GetCategoryTypesTask extends BaseCategoryTask<CategoryType[]> {
   get name(): string {
-    return GetDisciplineCategoriesTask.name;
+    return GetCategoryTypesTask.name;
   }
 
   constructor(member: Member, categoryService: CategoryService) {
@@ -17,10 +17,10 @@ export class GetDisciplineCategoriesTask extends BaseCategoryTask<Category[]> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    // get Category
-    const allCategories = await this.categoryService.getAllDisplines(handler);
+    // get all types
+    const types = await this.categoryService.getCategoryTypes(handler);
 
     this.status = 'OK';
-    this._result = allCategories;
+    this._result = types;
   }
 }

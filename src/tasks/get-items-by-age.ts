@@ -5,10 +5,10 @@ import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
 import { ItemCategory } from '../interfaces/item-category';
 
-export class GetItemsByAge extends BaseCategoryTask<ItemCategory[]> {
+export class GetItemsByCategoryTask extends BaseCategoryTask<ItemCategory[]> {
   protected categoryId: string;
   get name(): string {
-    return GetItemsByAge.name;
+    return GetItemsByCategoryTask.name;
   }
 
   constructor(member: Member, categoryId: string, categoryService: CategoryService) {
@@ -20,7 +20,7 @@ export class GetItemsByAge extends BaseCategoryTask<ItemCategory[]> {
     this.status = 'RUNNING';
 
     // get Category (age)
-    const itemcategory = await this.categoryService.getItemByAge(this.categoryId, handler);
+    const itemcategory = await this.categoryService.getItemByCategory(this.categoryId, handler);
 
     this.status = 'OK';
     this._result = itemcategory;

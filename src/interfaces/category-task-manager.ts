@@ -4,8 +4,8 @@ import { Actor, Task } from 'graasp';
 import { Category } from './category';
 
 export interface CategoryTaskManager<A extends Actor = Actor> {
-  getGetTaskName(): string;
+  getGetCategoryTaskName(): string;
 
-  createGetTask(actor: A, objectId: string): Task<A, Category>;
-  createGetAllTask(actor: A): Task<A, Category[]>;
+  createGetCategoryTask(actor: A, objectId: string): Task<A, Category>;
+  createGetCategoriesByTypeTask(actor: A, type: string): Task<A, Category[]>;
 }

@@ -5,7 +5,7 @@ import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
 import { ItemCategory } from '../interfaces/item-category';
 
-export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory> {
+export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
   protected itemId: string;
   get name(): string {
     return GetItemCategoryTask.name;
@@ -19,9 +19,9 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    const itemCategory = await this.categoryService.getItemCategory(this.itemId, handler);
+    const itemCategories = await this.categoryService.getItemCategory(this.itemId, handler);
 
     this.status = 'OK';
-    this._result = itemCategory;
+    this._result = itemCategories;
   }
 }

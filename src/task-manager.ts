@@ -3,16 +3,14 @@ import { ItemService, Member } from 'graasp';
 // local
 import { CategoryService } from './db-service';
 import { GetCategoryTask } from './tasks/get-category-task';
-import { GetAllTask} from './tasks/get-all-task';
+import { GetCategoriesByTypeTask} from './tasks/get-categories-by-type-task';
 import { CategoryTaskManager } from './interfaces/category-task-manager';
-import { GetDisciplineCategoriesTask } from './tasks/get-discipline-category-task';
-import { CreateItemCategoryAgeTask } from './tasks/create-item-category-task';
 import { ItemCategory } from './interfaces/item-category';
-import { CreateItemCategoryDisciplineTask } from './tasks/create-item-category-discipline-task';
-import { GetCategoryDiscTask } from './tasks/get-discipline-task';
-import { GetItemsByAge } from './tasks/get-items-by-age';
-import { GetItemsByDiscipline } from './tasks/get-items-by-discipline';
 import { GetItemCategoryTask } from './tasks/get-item-category-task';
+import { GetCategoryTypesTask } from './tasks/get-types-task';
+import { CreateItemCategoryTask } from './tasks/create-item-category-task';
+import { DeleteItemCategoryTask } from './tasks/delete-item-category-task';
+import { GetItemsByCategoryTask } from './tasks/get-items-by-age';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
@@ -24,54 +22,44 @@ export class TaskManager implements CategoryTaskManager {
   }
 
   // CRUD
-  getGetTaskName(): string { return GetCategoryTask.name; }
-  getGetCategoryDiscName(): string { return GetCategoryDiscTask.name }
-  getGetAllTaskName(): string { return GetAllTask.name;}
-  getGetAllDisciplinesTaskName(): string { return GetDisciplineCategoriesTask.name; }
-  getGetItemsByAgeName(): string { return GetItemsByAge.name; }
-  getGetItemsByDiscName(): string { return GetItemsByDiscipline.name; }
+  getGetCategoriesByTypeTaskName(): string { return GetCategoriesByTypeTask.name; }
+  getGetCategoryTypesTaskName(): string { return GetCategoryTypesTask.name; }
+  getGetCategoryTaskName(): string { return GetCategoryTask.name; }
+  getGetItemsByCategoryTaskName(): string { return GetItemsByCategoryTask.name; }
   getGetItemCategoryTaskName(): string { return GetItemCategoryTask.name; }
-  createItemCategoryAgeTaskName(): string { return CreateItemCategoryAgeTask.name; }
-  createItemCategoryDisciplineTaskName(): string { return CreateItemCategoryDisciplineTask.name; }
+  getCreateItemCategoryTaskName(): string { return CreateItemCategoryTask.name; }
+  getDeleteItemCategoryTaskName(): string { return DeleteItemCategoryTask.name; }
   
 
   // Other
 
   // CRUD
-  createGetTask(member: Member, categoryId: string): GetCategoryTask {
+  createGetCategoryTask(member: Member, categoryId: string): GetCategoryTask {
     return new GetCategoryTask(member, categoryId, this.categoryService);
   }
 
-  createGetCategoryDiscTask(member: Member, categoryId: string): GetCategoryDiscTask {
-    return new GetCategoryDiscTask(member, categoryId, this.categoryService);
+  createGetCategoriesByTypeTask(member: Member, type: string): GetCategoriesByTypeTask {
+    return new GetCategoriesByTypeTask({typeName: type}, member, this.categoryService);
   }
 
-  createGetAllTask(member: Member): GetAllTask {
-    return new GetAllTask(member, this.categoryService);
+  createGetCategoryTypesTask(member: Member): GetCategoryTypesTask{
+    return new GetCategoryTypesTask(member, this.categoryService);
   }
 
-  createGetAllDisciplinesTask(member: Member): GetDisciplineCategoriesTask {
-    return new GetDisciplineCategoriesTask(member, this.categoryService);
-  }
-
-  createGetItemsByAge(member: Member, categoryId: string): GetItemsByAge {
-    return new GetItemsByAge(member, categoryId, this.categoryService);
-  }
-
-  createGetItemsByDisc(member: Member, categoryId: string): GetItemsByDiscipline {
-    return new GetItemsByDiscipline(member, categoryId, this.categoryService);
+  createGetItemsByCategoryTask(member: Member, categoryId: string): GetItemsByCategoryTask {
+    return new GetItemsByCategoryTask(member, categoryId, this.categoryService);
   }
 
   createGetItemCategoryTask(member: Member, itemId: string): GetItemCategoryTask {
     return new GetItemCategoryTask(member, itemId, this.categoryService);
   }
 
-  createCreateItemCategoryAgeTask(member: Member, data: Partial<ItemCategory>, itemId: string): CreateItemCategoryAgeTask{
-    return new CreateItemCategoryAgeTask(member, data, itemId, this.itemService, this.categoryService)
+  createCreateItemCategoryTask(member: Member, data: ItemCategory, itemId: string): CreateItemCategoryTask{
+    return new CreateItemCategoryTask(member, data, itemId, this.categoryService);
   }
 
-  createCreateItemCategoryDisciplineTask(member: Member, data: Partial<ItemCategory>, itemId: string): CreateItemCategoryDisciplineTask{
-    return new CreateItemCategoryDisciplineTask(member, data, itemId, this.itemService, this.categoryService)
+  createDeleteItemCategoryTask(member: Member, data: ItemCategory, itemId: string): DeleteItemCategoryTask{
+    return new DeleteItemCategoryTask(member, data, itemId, this.categoryService);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

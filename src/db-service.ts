@@ -2,6 +2,7 @@
 import { sql, DatabaseTransactionConnectionType as TrxHandler } from 'slonik';
 // local
 import { Category } from './interfaces/category';
+import { CategoryType } from './interfaces/category-type';
 import { ItemCategory } from './interfaces/item-category';
 
 /**
@@ -10,9 +11,10 @@ import { ItemCategory } from './interfaces/item-category';
 export class CategoryService {
 
   /**
-   * Get all age categories
+   * Get all categories in given type
    */
-  async getAll(
+  async getCategoriesByType(
+    type: string,
     dbHandler: TrxHandler,
   ): Promise<Category[]> {
     return (
@@ -20,26 +22,8 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM category_age
-      `,
-        )
-        // TODO: is there a better way?
-        .then(({ rows }) => rows.slice(0))
-    );
-  }
-
-  /**
-   * Get all displine categories
-   */
-   async getAllDisplines(
-    dbHandler: TrxHandler,
-  ): Promise<Category[]> {
-    return (
-      dbHandler
-        .query<Category>(
-          sql`
-        SELECT *
-        FROM category_discipline
+        FROM all_categories
+        WHERE type = ${type}
       `,
         )
         // TODO: is there a better way?
@@ -52,8 +36,8 @@ export class CategoryService {
    * @param id Category's id
    * @param dbHandler Database handler
    */
-  async get(
-    id: number,
+  async getCategory(
+    id: string,
     dbHandler: TrxHandler,
   ): Promise<Category> {
     return (
@@ -61,7 +45,7 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM category_age
+        FROM all_categories
         WHERE id = ${id}
         `,
           )
@@ -69,20 +53,19 @@ export class CategoryService {
     );
   }
 
-  async getCategoryDisc(
-    id: number,
+  // Get category types
+  async getCategoryTypes(
     dbHandler: TrxHandler,
-  ): Promise<Category> {
+  ): Promise<CategoryType[]> {
     return (
       dbHandler
-        .query<Category>(
+        .query<CategoryType>(
           sql`
         SELECT *
-        FROM category_discipline
-        WHERE id = ${id}
+        FROM category_types
         `,
           )
-        .then(({ rows }) => rows[0] || null)
+        .then(({ rows }) => rows.slice(0))
     );
   }
 
@@ -94,7 +77,7 @@ export class CategoryService {
    async getItemCategory(
     id: string,
     dbHandler: TrxHandler,
-  ): Promise<ItemCategory> {
+  ): Promise<ItemCategory[]> {
     return (
       dbHandler
         .query<ItemCategory>(
@@ -104,11 +87,11 @@ export class CategoryService {
         WHERE item_id = ${id}
         `,
           )
-        .then(({ rows }) => rows[0] || null)
+        .then(({ rows }) => rows.slice(0))
     );
   }
 
-  async getItemByDiscipline(
+  async getItemByCategory(
     id: string,
     dbHandler: TrxHandler,
   ): Promise<ItemCategory[]> {
@@ -118,54 +101,30 @@ export class CategoryService {
           sql`
         SELECT *
         FROM item_category
-        WHERE category_discipline = ${id}
+        WHERE category = ${id}
         `,
           )
         .then(({ rows }) => rows.slice(0))
     );
   }
 
-  async getItemByAge(
-    id: string,
-    dbHandler: TrxHandler,
-  ): Promise<ItemCategory[]> {
-    return (
-      dbHandler
-        .query<ItemCategory>(
-          sql`
-        SELECT *
-        FROM item_category
-        WHERE category_age = ${id}
-        `,
-          )
-        .then(({ rows }) => rows.slice(0))
-    );
+  async createItemCategory(itemId: string, categoryId: string, transactionHandler: TrxHandler): Promise<ItemCategory> {
+    return transactionHandler.query<ItemCategory>(sql`
+        INSERT INTO item_category (item_id, category)
+        VALUES (${itemId}, ${categoryId})
+        ON CONFLICT DO NOTHING
+        RETURNING item_id, category
+      `)
+      .then(({ rows }) => rows[0] || null);
   }
 
-  async createAge(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {
-    const { itemId, categoryAge } = itemCategory;
+  async delete(itemId: string, categoryId: string, transactionHandler: TrxHandler): Promise<ItemCategory> {
     return transactionHandler.query<ItemCategory>(sql`
-        INSERT INTO item_category (item_id, category_age)
-        VALUES (${itemId}, ${categoryAge})
-        ON CONFLICT (item_id)
-        DO
-        UPDATE SET category_age = ${categoryAge}
-        RETURNING item_id, category_age, category_discipline
+        DELETE FROM item_category
+        WHERE item_id = ${itemId} and category = ${categoryId}
+        RETURNING item_id, category
       `)
-      .then(({ rows }) => rows[0]);
-  }
-
-  async createDiscipline(itemCategory: Partial<ItemCategory>, transactionHandler: TrxHandler): Promise<ItemCategory> {
-    const { itemId, categoryDiscipline } = itemCategory;
-    return transactionHandler.query<ItemCategory>(sql`
-        INSERT INTO item_category (item_id, category_discipline)
-        VALUES (${itemId}, ${categoryDiscipline})
-        ON CONFLICT (item_id)
-        DO
-        UPDATE SET category_discipline = ${categoryDiscipline}
-        RETURNING item_id, category_age, category_discipline
-      `)
-      .then(({ rows }) => rows[0]);
+      .then(({ rows }) => rows[0] || null);
   }
 
 }
