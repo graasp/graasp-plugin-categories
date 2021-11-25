@@ -10,7 +10,7 @@ import { GetItemCategoryTask } from './tasks/get-item-category-task';
 import { GetCategoryTypesTask } from './tasks/get-types-task';
 import { CreateItemCategoryTask } from './tasks/create-item-category-task';
 import { DeleteItemCategoryTask } from './tasks/delete-item-category-task';
-import { GetItemsByCategoryTask } from './tasks/get-items-by-age';
+import { GetItemsByCategoryTask } from './tasks/get-items-by-category';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
