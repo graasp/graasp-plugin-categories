@@ -39,9 +39,9 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get categories of given type(s)
-  fastify.get<{ Querystring: {types: string[]}}>(
+  fastify.get<{ Querystring: {type: string[]}}>(
     '/categories',
-    async ({ member, query: {types: typeIds}, log }) => {
+    async ({ member, query: {type: typeIds}, log }) => {
       const task = taskManager.createGetCategoriesByTypeTask(member, typeIds);
       return runner.runSingle(task, log);
     },
