@@ -31,38 +31,32 @@ export class TaskManager implements CategoryTaskManager {
   getDeleteItemCategoryTaskName(): string { return DeleteItemCategoryTask.name; }
   
 
-  // Other
-
   // CRUD
   createGetCategoryTask(member: Member, categoryId: string): GetCategoryTask {
-    return new GetCategoryTask(member, categoryId, this.categoryService);
+    return new GetCategoryTask({categoryId: categoryId}, member, this.categoryService);
   }
 
-  createGetCategoriesByTypeTask(member: Member, type: string): GetCategoriesByTypeTask {
-    return new GetCategoriesByTypeTask({typeName: type}, member, this.categoryService);
+  createGetCategoriesByTypeTask(member: Member, types: string[]): GetCategoriesByTypeTask {
+    return new GetCategoriesByTypeTask({types: types}, member, this.categoryService);
   }
 
   createGetCategoryTypesTask(member: Member): GetCategoryTypesTask{
     return new GetCategoryTypesTask(member, this.categoryService);
   }
 
-  createGetItemsByCategoryTask(member: Member, categoryId: string): GetItemsByCategoryTask {
-    return new GetItemsByCategoryTask(member, categoryId, this.categoryService);
+  createGetItemsByCategoryTask(member: Member, categoryIds: string[]): GetItemsByCategoryTask {
+    return new GetItemsByCategoryTask({categoryIds: categoryIds}, member, this.categoryService);
   }
 
   createGetItemCategoryTask(member: Member, itemId: string): GetItemCategoryTask {
-    return new GetItemCategoryTask(member, itemId, this.categoryService);
+    return new GetItemCategoryTask({itemId: itemId} ,member, this.categoryService);
   }
 
   createCreateItemCategoryTask(member: Member, data: ItemCategory, itemId: string): CreateItemCategoryTask{
-    return new CreateItemCategoryTask(member, data, itemId, this.categoryService);
+    return new CreateItemCategoryTask({itemId: itemId, data: data}, member, this.categoryService);
   }
 
-  createDeleteItemCategoryTask(member: Member, data: ItemCategory, itemId: string): DeleteItemCategoryTask{
-    return new DeleteItemCategoryTask(member, data, itemId, this.categoryService);
+  createDeleteItemCategoryTask(member: Member, entryId: string): DeleteItemCategoryTask{
+    return new DeleteItemCategoryTask({entryId: entryId}, member, this.categoryService);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-  // Other
 }

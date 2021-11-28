@@ -8,23 +8,25 @@ import { CategoryService } from '../db-service';
 import { ItemCategory } from '../interfaces/item-category';
 import { BaseCategoryTask } from './base-category-task';
 
+type InputType = { itemId?: string, data?: ItemCategory };
+
 export class CreateItemCategoryTask extends BaseCategoryTask<ItemCategory> {
+  input: InputType;
+  getInput: () => InputType;
+
   get name(): string { return CreateItemCategoryTask.name; }
 
-  constructor(member: Member, data: ItemCategory, itemId: string,
-              CategoryService: CategoryService) {
+  constructor(input: InputType, member: Member, CategoryService: CategoryService) {
     super(member, CategoryService);
-    this.data = data;
-    this.targetId = itemId;
+    this.input = input ?? {};
   }
 
   async run(handler: DatabaseTransactionHandler, log: FastifyLoggerInstance): Promise<void> {
     this.status = 'RUNNING';
 
-    const categoryId = this.data.categoryId;
-
-    // create age category
-    this._result = await this.categoryService.createItemCategory(this.targetId, categoryId, handler);
+    // create entry in item-category
+    const {itemId, data} = this.input
+    this._result = await this.categoryService.createItemCategory(itemId, data.categoryId, handler);
     this.status = 'OK';
   }
 }

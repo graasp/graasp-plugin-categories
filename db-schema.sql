@@ -49,9 +49,10 @@ VALUES (
 
 -- CREATE item_category table
 CREATE TABLE item_category (
+    id uuid DEFAULT uuid_generate_v4(),
     item_id uuid,
-    category uuid,
-    PRIMARY KEY(item_id, category),
+    category_id uuid,
+    PRIMARY KEY(item_id, category_id),
     FOREIGN KEY(item_id) REFERENCES item(id) ON DELETE CASCADE,
-    FOREIGN KEY(category) REFERENCES all_categories(id) ON DELETE CASCADE
+    FOREIGN KEY(category_id) REFERENCES all_categories(id) ON DELETE CASCADE
 );

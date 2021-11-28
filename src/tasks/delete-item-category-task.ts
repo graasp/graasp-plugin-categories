@@ -3,31 +3,32 @@ import { DatabaseTransactionHandler } from 'graasp';
 // other services
 import { Member } from 'graasp';
 import { CategoryService } from '../db-service';
-import { ItemCategory } from '../interfaces/item-category';
 import { BaseCategoryTask } from './base-category-task';
 // local
 
+type InputType = { entryId?: string };
 
-export class DeleteItemCategoryTask extends BaseCategoryTask<ItemCategory> {
+export class DeleteItemCategoryTask extends BaseCategoryTask<Number> {
+  input: InputType;
+  getInput: () => InputType;
+
   get name(): string { return DeleteItemCategoryTask.name; }
 
-  constructor(member: Member, data: ItemCategory, itemId: string,
-              CategoryService: CategoryService) {
+  constructor(input: InputType, member: Member, CategoryService: CategoryService) {
     super(member, CategoryService);
-    this.data = data;
-    this.targetId = itemId;
+    this.input = input ?? {};
     }
 
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    const categoryId = this.data.categoryId;
-
+    const { entryId } = this.input;
+    console.log(entryId);
     // delete item category entry
-    const itemCategory = await this.categoryService.delete(this.targetId, categoryId, handler);
+    const deleted = await this.categoryService.delete(entryId, handler);
 
     // return item tags
     this.status = 'OK';
-    this._result = itemCategory;
+    this._result = deleted;
   }
 }

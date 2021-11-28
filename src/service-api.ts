@@ -22,7 +22,7 @@ const plugin: FastifyPluginAsync = async (fastify) => {
 
     // get category info
   fastify.get<{ Params: {categoryId: string };}>(
-    '/category/info/:categoryId',
+    '/categories/:categoryId',
     async ({ member, params: {categoryId}, log }) => {
       const task = taskManager.createGetCategoryTask(member, categoryId);
       return runner.runSingle(task, log);
@@ -31,18 +31,18 @@ const plugin: FastifyPluginAsync = async (fastify) => {
 
   // get types
   fastify.get(
-    '/category/types',
+    '/category-types',
     async ({ member, log }) => {
       const task = taskManager.createGetCategoryTypesTask(member);
       return runner.runSingle(task, log);
     },
   );
 
-  // get categories of given type
-  fastify.get<{ Params: {typeId: string}; }>(
-    '/categories/:typeId',
-    async ({ member, params: {typeId}, log }) => {
-      const task = taskManager.createGetCategoriesByTypeTask(member, typeId);
+  // get categories of given type(s)
+  fastify.get<{ Querystring: {types: string[]}}>(
+    '/categories',
+    async ({ member, query: {types: typeIds}, log }) => {
+      const task = taskManager.createGetCategoriesByTypeTask(member, typeIds);
       return runner.runSingle(task, log);
     },
   );
@@ -56,18 +56,18 @@ const plugin: FastifyPluginAsync = async (fastify) => {
     },
   );
 
-  // get items in given category
-  fastify.get<{ Params: {categoryId: string };}>(
-    '/category/:categoryId',
-    async ({ member, params: {categoryId}, log }) => {
-      const task = taskManager.createGetItemsByCategoryTask(member, categoryId);
+  // get items in given category(ies)
+  fastify.get<{ Querystring: {categories: string[] };}>(
+    '/item-category',
+    async ({ member, query: {categories: categoryIds}, log }) => {
+      const task = taskManager.createGetItemsByCategoryTask(member, categoryIds);
       return runner.runSingle(task, log);
     },
   );
 
     // insert item category
   fastify.post<{ Params: { itemId: string }; Body: ItemCategory }>(
-    '/category/create/:itemId', { schema: create },
+    '/:itemId/categories', { schema: create },
     async ({ member, params: { itemId }, body, log }) => {
       const task = taskManager.createCreateItemCategoryTask(member, body, itemId);
       return runner.runSingle(task, log);
@@ -75,10 +75,10 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   );   
 
     // delete item category entry
-    fastify.post<{ Params: { itemId: string }; Body: ItemCategory }>(
-      '/category/delete/:itemId', { schema: create },
-      async ({ member, params: { itemId }, body, log }) => {
-        const task = taskManager.createDeleteItemCategoryTask(member, body, itemId);
+    fastify.delete<{ Params: { entryId: string }; }>(
+      '/item-category/:entryId',
+      async ({ member, params: { entryId }, log }) => {
+        const task = taskManager.createDeleteItemCategoryTask(member, entryId);
         return runner.runSingle(task, log);
       },
     );  

@@ -5,7 +5,7 @@ import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
 import { Category } from '../interfaces/category';
 
-type InputType = { typeName?: string };
+type InputType = { types?: string[] };
 
 export class GetCategoriesByTypeTask extends BaseCategoryTask<Category[]> {
   input: InputType;
@@ -23,10 +23,10 @@ export class GetCategoriesByTypeTask extends BaseCategoryTask<Category[]> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    const { typeName } = this.input;
+    const { types } = this.input;
 
     // get all categories of given type
-    const categories = await this.categoryService.getCategoriesByType(typeName, handler);
+    const categories = await this.categoryService.getCategoriesByType(types, handler);
 
     this.status = 'OK';
     this._result = categories;
