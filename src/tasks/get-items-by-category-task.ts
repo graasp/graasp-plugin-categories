@@ -3,16 +3,15 @@ import { DatabaseTransactionHandler, Member } from 'graasp'
 // local
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
-import { Category } from '../interfaces/category';
 
-type InputType = { categoryId?: string };
+type InputType = { categoryIds?: string[] };
 
-export class GetCategoryTask extends BaseCategoryTask<Category> {
+export class GetItemsByCategoryTask extends BaseCategoryTask<string[]> {
   input: InputType;
   getInput: () => InputType;
 
   get name(): string {
-    return GetCategoryTask.name;
+    return GetItemsByCategoryTask.name;
   }
 
   constructor(input: InputType, member: Member, categoryService: CategoryService) {
@@ -23,11 +22,11 @@ export class GetCategoryTask extends BaseCategoryTask<Category> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    const { categoryId } = this.input;
     // get Category (age)
-    const category = await this.categoryService.getCategory(categoryId, handler);
+    const { categoryIds } = this.input;
+    const items = await this.categoryService.getItemByCategory(categoryIds, handler);
 
     this.status = 'OK';
-    this._result = category;
+    this._result = items;
   }
 }

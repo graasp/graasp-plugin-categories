@@ -20,4 +20,11 @@ const getOne = {
   },
 };
 
-export { getOne };
+const create = {
+  params: { $ref: 'http://graasp.org/item-flags/#/definitions/itemIdParam' },
+  body: { },
+  response: {
+    201: { }
+  }
+};
+export { getOne, create };

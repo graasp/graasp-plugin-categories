@@ -3,7 +3,8 @@ import { FastifyPluginAsync } from 'fastify';
 
 // local
 import { CategoryService } from './db-service';
-import common from './schemas';
+import { ItemCategory } from './interfaces/item-category';
+import common, { create, getOne } from './schemas';
 import { TaskManager } from './task-manager';
 
 const plugin: FastifyPluginAsync = async (fastify) => {
@@ -19,24 +20,68 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   // get current user
   fastify.get('/current', async ({ member }) => member);
 
-    // // get member
-    // fastify.get(
-    //   '/:id',
-    //   { schema: getOne },
-    //   async ({ category, id , log }) => {
-    //     const task = taskManager.createGetTask(category, id);
-    //     return runner.runSingle(task, log);
-    //   },
-    // );
+    // get category info
+  fastify.get<{ Params: {categoryId: string };}>(
+    '/categories/:categoryId',
+    async ({ member, params: {categoryId}, log }) => {
+      const task = taskManager.createGetCategoryTask(member, categoryId);
+      return runner.runSingle(task, log);
+    },
+  );
 
-    // get members
-    fastify.get(
-      '/allcategories',
-      async ({ member, log }) => {
-        const task = taskManager.createGetAllTask(member);
+  // get types
+  fastify.get(
+    '/category-types',
+    async ({ member, log }) => {
+      const task = taskManager.createGetCategoryTypesTask(member);
+      return runner.runSingle(task, log);
+    },
+  );
+
+  // get categories of given type(s)
+  fastify.get<{ Querystring: {types: string[]}}>(
+    '/categories',
+    async ({ member, query: {types: typeIds}, log }) => {
+      const task = taskManager.createGetCategoriesByTypeTask(member, typeIds);
+      return runner.runSingle(task, log);
+    },
+  );
+
+  //get category of an item
+  fastify.get<{ Params: {itemId: string };}>(
+    '/:itemId/categories',
+    async ({ member, params: {itemId}, log }) => {
+      const task = taskManager.createGetItemCategoryTask(member, itemId);
+      return runner.runSingle(task, log);
+    },
+  );
+
+  // get items in given category(ies)
+  fastify.get<{ Querystring: {categories: string[] };}>(
+    '/item-category',
+    async ({ member, query: {categories: categoryIds}, log }) => {
+      const task = taskManager.createGetItemsByCategoryTask(member, categoryIds);
+      return runner.runSingle(task, log);
+    },
+  );
+
+    // insert item category
+  fastify.post<{ Params: { itemId: string }; Body: ItemCategory }>(
+    '/:itemId/categories', { schema: create },
+    async ({ member, params: { itemId }, body, log }) => {
+      const task = taskManager.createCreateItemCategoryTask(member, body, itemId);
+      return runner.runSingle(task, log);
+    },
+  );   
+
+    // delete item category entry
+    fastify.delete<{ Params: { entryId: string }; }>(
+      '/item-category/:entryId',
+      async ({ member, params: { entryId }, log }) => {
+        const task = taskManager.createDeleteItemCategoryTask(member, entryId);
         return runner.runSingle(task, log);
       },
-    );
+    );  
 };
 
 export default plugin;
