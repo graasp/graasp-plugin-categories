@@ -57,9 +57,9 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get items in given category(ies)
-  fastify.get<{ Querystring: {categories: string[] };}>(
+  fastify.get<{ Querystring: {category: string[] };}>(
     '/item-category',
-    async ({ member, query: {categories: categoryIds}, log }) => {
+    async ({ member, query: {category: categoryIds}, log }) => {
       const task = taskManager.createGetItemsByCategoryTask(member, categoryIds);
       return runner.runSingle(task, log);
     },
