@@ -39,9 +39,9 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get categories of given type(s)
-  fastify.get<{ Querystring: {types: string[]}}>(
+  fastify.get<{ Querystring: {type: string[]}}>(
     '/categories',
-    async ({ member, query: {types: typeIds}, log }) => {
+    async ({ member, query: {type: typeIds}, log }) => {
       const task = taskManager.createGetCategoriesByTypeTask(member, typeIds);
       return runner.runSingle(task, log);
     },
@@ -57,9 +57,9 @@ const plugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get items in given category(ies)
-  fastify.get<{ Querystring: {categories: string[] };}>(
-    '/item-category',
-    async ({ member, query: {categories: categoryIds}, log }) => {
+  fastify.get<{ Querystring: {category: string[] };}>(
+    '/withCategories',
+    async ({ member, query: {category: categoryIds}, log }) => {
       const task = taskManager.createGetItemsByCategoryTask(member, categoryIds);
       return runner.runSingle(task, log);
     },
