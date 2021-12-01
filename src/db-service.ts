@@ -10,6 +10,36 @@ import { ItemCategory } from './interfaces/item-category';
  */
 export class CategoryService {
 
+  private static allColumns = sql.join(
+    [
+      'id',
+      ['item_id', 'itemId'],
+      ['category_id', 'categoryId'],
+    ].map((c) =>
+      !Array.isArray(c)
+        ? sql.identifier([c])
+        : sql.join(
+            c.map((cwa) => sql.identifier([cwa])),
+            sql` AS `,
+          ),
+    ),
+    sql`, `,
+  );
+
+  private static allColumnsItemId = sql.join(
+    [
+      ['item_id', 'itemId'],
+    ].map((c) =>
+      !Array.isArray(c)
+        ? sql.identifier([c])
+        : sql.join(
+            c.map((cwa) => sql.identifier([cwa])),
+            sql` AS `,
+          ),
+    ),
+    sql`, `,
+  );
+
   /**
    * Get all categories in given types
    */
@@ -109,7 +139,7 @@ export class CategoryService {
       dbHandler
         .query<ItemCategory>(
           sql`
-        SELECT *
+        SELECT ${CategoryService.allColumns}
         FROM item_category
         WHERE item_id = ${id}
         `,
@@ -128,7 +158,7 @@ export class CategoryService {
         dbHandler
           .query<string>(
             sql`
-          SELECT item_id
+          SELECT ${CategoryService.allColumnsItemId}
           FROM item_category
           WHERE category_id = ${ids}
           `,
@@ -143,7 +173,7 @@ export class CategoryService {
           SELECT item_id FROM item_category
           WHERE category_id = ${ids[0]}
         )
-        SELECT item_id FROM item_category
+        SELECT ${CategoryService.allColumnsItemId} FROM item_category
         WHERE category_id = ${ids[1]} and item_id IN (SELECT item_id FROM temp)
         `,
           )
@@ -156,7 +186,7 @@ export class CategoryService {
         INSERT INTO item_category (item_id, category_id)
         VALUES (${itemId}, ${categoryId})
         ON CONFLICT DO NOTHING
-        RETURNING *
+        RETURNING ${CategoryService.allColumns}
       `)
       .then(({ rows }) => rows[0] || null);
   }
