@@ -2,15 +2,18 @@ CREATE TABLE IF NOT EXISTS category_types (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     name VARCHAR(20)
 );
-INSERT INTO category_types (name)
-VALUES ('age'),
-    ('discipline');
+
+INSERT INTO category_types (id,name)
+VALUES ('3f7b79e2-7e78-4aea-b697-2b6a6ba92e91','age'),
+    ('c344bf4f-19e0-4674-b2a2-06bb5ac6e11c','discipline');
+
 CREATE TABLE IF NOT EXISTS all_categories (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     name VARCHAR(50),
     type uuid,
     FOREIGN KEY (type) REFERENCES category_types("id") ON DELETE CASCADE
 );
+
 INSERT INTO all_categories (name, type)
 VALUES (
         'pre-school',
@@ -47,7 +50,6 @@ VALUES (
     ),
     ('art', 'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c');
 
--- CREATE item_category table
 CREATE TABLE item_category (
     id uuid DEFAULT uuid_generate_v4(),
     item_id uuid,
