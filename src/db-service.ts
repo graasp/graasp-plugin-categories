@@ -200,4 +200,44 @@ export class CategoryService {
       .then(({ rows }) => rows[0] || null);
   }
 
+  /* queries related to customized tags */
+
+   // get customized tags of given item
+   async getSettings(
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<JSON> {
+    return (
+      dbHandler
+        .query<JSON>(
+          sql`
+        SELECT settings
+        FROM item
+        WHERE id = ${id}
+        `,
+          )
+        .then(({ rows }) => rows[0] || null)
+    );
+  } 
+
+   // update customized tags
+   async updateSettings(
+    settings: string,
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<string> {
+    return (
+      dbHandler
+        .query<string>(
+          sql`
+          UPDATE item
+          SET settings = ${settings}
+          WHERE id = ${id}
+          RETURNING settings
+        `,
+          )
+        .then(({ rows }) => rows[0] || null)
+    );
+  } 
+
 }

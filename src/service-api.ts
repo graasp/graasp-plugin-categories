@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from 'fastify';
 
 // local
 import { CategoryService } from './db-service';
+import { CustomizedTags } from './interfaces/customized-tags';
 import { ItemCategory } from './interfaces/item-category';
 import common, { create, getOne } from './schemas';
 import { TaskManager } from './task-manager';
@@ -82,6 +83,26 @@ const plugin: FastifyPluginAsync = async (fastify) => {
         return runner.runSingle(task, log);
       },
     );  
+
+    /* customized tags endpoints */
+    // get customized tags
+    fastify.get<{ Params: {itemId: string };}>(
+      '/:itemId/customized-tags',
+      async ({ member, params: {itemId}, log }) => {
+        const task = taskManager.createGetCustomizedTagsTask(member, itemId);
+        return runner.runSingle(task, log);
+      },
+    );
+
+    // update customized tags
+    fastify.post<{ Params: {itemId: string }; Body: CustomizedTags}>(
+      '/:itemId/customized-tags',
+      async ({ member, params: {itemId}, body, log }) => {
+        const task = taskManager.createUpdateCustomizedTagsTask(member, body, itemId);
+        return runner.runSingle(task, log);
+      },
+    );
+
 };
 
 export default plugin;

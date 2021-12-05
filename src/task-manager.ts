@@ -11,6 +11,9 @@ import { GetCategoryTypesTask } from './tasks/get-types-task';
 import { CreateItemCategoryTask } from './tasks/create-item-category-task';
 import { DeleteItemCategoryTask } from './tasks/delete-item-category-task';
 import { GetItemsByCategoryTask } from './tasks/get-items-by-category-task';
+import { GetCustomizedTagsTask } from './tasks/get-customized-tags-task';
+import { UpdateCustomizedTagsTask } from './tasks/update-customized-tags-task';
+import { CustomizedTags } from './interfaces/customized-tags';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
@@ -21,7 +24,7 @@ export class TaskManager implements CategoryTaskManager {
     this.itemService = this.itemService;
   }
 
-  // CRUD
+  // category
   getGetCategoriesByTypeTaskName(): string { return GetCategoriesByTypeTask.name; }
   getGetCategoryTypesTaskName(): string { return GetCategoryTypesTask.name; }
   getGetCategoryTaskName(): string { return GetCategoryTask.name; }
@@ -29,9 +32,13 @@ export class TaskManager implements CategoryTaskManager {
   getGetItemCategoryTaskName(): string { return GetItemCategoryTask.name; }
   getCreateItemCategoryTaskName(): string { return CreateItemCategoryTask.name; }
   getDeleteItemCategoryTaskName(): string { return DeleteItemCategoryTask.name; }
+
+  //customized tags
+  getGetCustomizedTagsTaskName(): string { return GetCustomizedTagsTask.name; }
+  getCreateCustomizedTagsTaskName(): string { return UpdateCustomizedTagsTask.name; }
   
 
-  // CRUD
+  // category
   createGetCategoryTask(member: Member, categoryId: string): GetCategoryTask {
     return new GetCategoryTask({categoryId: categoryId}, member, this.categoryService);
   }
@@ -58,5 +65,14 @@ export class TaskManager implements CategoryTaskManager {
 
   createDeleteItemCategoryTask(member: Member, entryId: string): DeleteItemCategoryTask{
     return new DeleteItemCategoryTask({entryId: entryId}, member, this.categoryService);
+  }
+
+  // customized tags
+  createGetCustomizedTagsTask(member: Member, itemId: string): GetCustomizedTagsTask {
+    return new GetCustomizedTagsTask({itemId: itemId} ,member, this.categoryService);
+  }
+
+  createUpdateCustomizedTagsTask(member: Member, data: CustomizedTags, itemId: string): UpdateCustomizedTagsTask {
+    return new UpdateCustomizedTagsTask({itemId: itemId, data: data} ,member, this.categoryService);
   }
 }
