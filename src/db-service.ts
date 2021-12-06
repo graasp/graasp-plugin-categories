@@ -19,9 +19,32 @@ export class CategoryService {
       !Array.isArray(c)
         ? sql.identifier([c])
         : sql.join(
-            c.map((cwa) => sql.identifier([cwa])),
-            sql` AS `,
-          ),
+          c.map((cwa) => sql.identifier([cwa])),
+          sql` AS `,
+        ),
+    ),
+    sql`, `,
+  );
+
+  private static allColumnsForItems = sql.join(
+    [
+      'id',
+      'name',
+      'description',
+      'type',
+      'path',
+      'extra',
+      'settings',
+      'creator',
+      ['created_at', 'createdAt'],
+      ['updated_at', 'updatedAt'],
+    ].map((c) =>
+      !Array.isArray(c)
+        ? sql.identifier([c])
+        : sql.join(
+          c.map((cwa) => sql.identifier([cwa])),
+          sql` AS `,
+        ),
     ),
     sql`, `,
   );
@@ -33,9 +56,9 @@ export class CategoryService {
       !Array.isArray(c)
         ? sql.identifier([c])
         : sql.join(
-            c.map((cwa) => sql.identifier([cwa])),
-            sql` AS `,
-          ),
+          c.map((cwa) => sql.identifier([cwa])),
+          sql` AS `,
+        ),
     ),
     sql`, `,
   );
@@ -50,16 +73,16 @@ export class CategoryService {
     if (!types)
       return (
         dbHandler
-        .query<Category>(
-          sql`
+          .query<Category>(
+            sql`
         SELECT *
         FROM all_categories
       `,
-        )
-        .then(({ rows }) => rows.slice(0))
+          )
+          .then(({ rows }) => rows.slice(0))
       );
     if (typeof types == 'string')
-          types = [types];
+      types = [types];
     return (
       dbHandler
         .query<Category>(
@@ -105,7 +128,7 @@ export class CategoryService {
         FROM all_categories
         WHERE id = ${id}
         `,
-          )
+        )
         .then(({ rows }) => rows[0] || null)
     );
   }
@@ -121,7 +144,7 @@ export class CategoryService {
         SELECT *
         FROM category_types
         `,
-          )
+        )
         .then(({ rows }) => rows.slice(0))
     );
   }
@@ -143,13 +166,13 @@ export class CategoryService {
         FROM item_category
         WHERE item_id = ${id}
         `,
-          )
+        )
         .then(({ rows }) => rows.slice(0))
     );
   }
 
   // Get itemCategories matching given category(s)
-  async getItemByCategory(
+  async getItemsByCategory(
     ids: string[],
     dbHandler: TrxHandler,
   ): Promise<string[]> {
@@ -162,7 +185,7 @@ export class CategoryService {
           FROM item_category
           WHERE category_id = ${ids}
           `,
-            )
+          )
           .then(({ rows }) => rows.slice(0))
       );
     return (
@@ -174,9 +197,10 @@ export class CategoryService {
           WHERE category_id = ${ids[0]}
         )
         SELECT ${CategoryService.allColumnsItemId} FROM item_category
+        LEFT JOIN item ON item.id = item_category.item_id  
         WHERE category_id = ${ids[1]} and item_id IN (SELECT item_id FROM temp)
         `,
-          )
+        )
         .then(({ rows }) => rows.slice(0))
     );
   }
