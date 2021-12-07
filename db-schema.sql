@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS category_types (
     name VARCHAR(20)
 );
 INSERT INTO category_types (name)
-VALUES ('age'),
+VALUES ('level'),
     ('discipline');
 CREATE TABLE IF NOT EXISTS category (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
