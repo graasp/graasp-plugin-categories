@@ -53,7 +53,7 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM all_categories
+        FROM category
       `,
         )
         .then(({ rows }) => rows.slice(0))
@@ -65,7 +65,7 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM all_categories
+        FROM category
         WHERE type IN (${sql.join(types, sql`, `)})
       `,
         )
@@ -81,7 +81,7 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM all_categories
+        FROM category
       `,
         )
         .then(({ rows }) => rows.slice(0))
@@ -102,7 +102,7 @@ export class CategoryService {
         .query<Category>(
           sql`
         SELECT *
-        FROM all_categories
+        FROM category
         WHERE id = ${id}
         `,
           )

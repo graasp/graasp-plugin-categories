@@ -2,59 +2,65 @@ CREATE TABLE IF NOT EXISTS category_types (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     name VARCHAR(20)
 );
-
-INSERT INTO category_types (id,name)
-VALUES ('3f7b79e2-7e78-4aea-b697-2b6a6ba92e91','age'),
-    ('c344bf4f-19e0-4674-b2a2-06bb5ac6e11c','discipline');
-
-CREATE TABLE IF NOT EXISTS all_categories (
+INSERT INTO category_types (name)
+VALUES ('age'),
+    ('discipline');
+CREATE TABLE IF NOT EXISTS category (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     name VARCHAR(50),
     type uuid,
     FOREIGN KEY (type) REFERENCES category_types("id") ON DELETE CASCADE
 );
-
-INSERT INTO all_categories (name, type)
+INSERT INTO category (name, type)
 VALUES (
-        'pre-school',
+        'Kindergarden',
         '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
     ),
     (
-        'grade-1-to-8',
+        'Primary School',
         '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
     ),
     (
-        'high-school',
+        'Lower Secondary School',
         '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
     ),
     (
-        'college',
+        'Upper Secondary School',
         '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
     ),
-    ('math', 'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'),
     (
-        'language',
+        'Vocational Training',
+        '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
+    ),
+    (
+        'Higher Education',
+        '3f7b79e2-7e78-4aea-b697-2b6a6ba92e91'
+    ),
+    ('Math', 'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'),
+    (
+        'Language',
         'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'
     ),
     (
-        'natural-science',
+        'Natural Science',
         'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'
     ),
     (
-        'social-science',
+        'Social Science',
         'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'
     ),
     (
-        'literature',
+        'Literature',
         'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c'
     ),
-    ('art', 'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c');
+    ('Arts', 'c344bf4f-19e0-4674-b2a2-06bb5ac6e11c');
 
+-- CREATE item_category table
 CREATE TABLE item_category (
     id uuid DEFAULT uuid_generate_v4(),
     item_id uuid,
     category_id uuid,
     PRIMARY KEY(item_id, category_id),
     FOREIGN KEY(item_id) REFERENCES item(id) ON DELETE CASCADE,
-    FOREIGN KEY(category_id) REFERENCES all_categories(id) ON DELETE CASCADE
+    FOREIGN KEY(category_id) REFERENCES category(id) ON DELETE CASCADE
 );
