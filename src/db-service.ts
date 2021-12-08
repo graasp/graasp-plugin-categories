@@ -119,7 +119,7 @@ export class CategoryService {
         .query<CategoryType>(
           sql`
         SELECT *
-        FROM category_types
+        FROM category_type
         `,
           )
         .then(({ rows }) => rows.slice(0))
