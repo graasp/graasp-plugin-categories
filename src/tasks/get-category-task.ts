@@ -24,7 +24,6 @@ export class GetCategoryTask extends BaseCategoryTask<Category> {
     this.status = 'RUNNING';
 
     const { categoryId } = this.input;
-    // get Category (age)
     const category = await this.categoryService.getCategory(categoryId, handler);
 
     this.status = 'OK';

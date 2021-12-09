@@ -22,7 +22,6 @@ export class GetItemsByCategoryTask extends BaseCategoryTask<string[]> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    // get Category (age)
     const { categoryIds } = this.input;
     const items = await this.categoryService.getItemsByCategory(categoryIds, handler);
 
