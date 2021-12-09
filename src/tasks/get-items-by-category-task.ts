@@ -1,5 +1,5 @@
 // global
-import { DatabaseTransactionHandler, Member } from 'graasp'
+import { DatabaseTransactionHandler, Item, Member } from 'graasp'
 // local
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
@@ -24,7 +24,7 @@ export class GetItemsByCategoryTask extends BaseCategoryTask<string[]> {
 
     // get Category (age)
     const { categoryIds } = this.input;
-    const items = await this.categoryService.getItemByCategory(categoryIds, handler);
+    const items = await this.categoryService.getItemsByCategory(categoryIds, handler);
 
     this.status = 'OK';
     this._result = items;
