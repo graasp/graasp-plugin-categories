@@ -1,5 +1,5 @@
 // global
-import { DatabaseTransactionHandler, Member } from 'graasp'
+import { Actor, DatabaseTransactionHandler } from 'graasp';
 // local
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
@@ -15,7 +15,11 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
     return GetItemCategoryTask.name;
   }
 
-  constructor(input: InputType, member: Member, categoryService: CategoryService) {
+  constructor(
+    member: Actor,
+    categoryService: CategoryService,
+    input: InputType,
+  ) {
     super(member, categoryService);
     this.input = input ?? {};
   }
@@ -24,7 +28,11 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
     this.status = 'RUNNING';
 
     const { itemId } = this.input;
-    const itemCategories = await this.categoryService.getItemCategory(itemId, handler);
+    this.targetId = itemId;
+    const itemCategories = await this.categoryService.getItemCategory(
+      itemId,
+      handler,
+    );
 
     this.status = 'OK';
     this._result = itemCategories;
