@@ -1,21 +1,18 @@
 // global
+import { Item } from 'graasp';
 import { sql, DatabaseTransactionConnectionType as TrxHandler } from 'slonik';
 // local
 import { Category } from './interfaces/category';
 import { CategoryType } from './interfaces/category-type';
 import { ItemCategory } from './interfaces/item-category';
+import { groupBy } from './utils';
 
 /**
  * Database's first layer of abstraction for Categorys
  */
 export class CategoryService {
-
   private static allColumns = sql.join(
-    [
-      'id',
-      ['item_id', 'itemId'],
-      ['category_id', 'categoryId'],
-    ].map((c) =>
+    ['id', ['item_id', 'itemId'], ['category_id', 'categoryId']].map((c) =>
       !Array.isArray(c)
         ? sql.identifier([c])
         : sql.join(
@@ -26,39 +23,23 @@ export class CategoryService {
     sql`, `,
   );
 
-  private static allColumnsForItems = sql.join(
+  private static allColumnsItemForJoins = sql.join(
     [
-      'id',
-      'name',
-      'description',
-      'type',
-      'path',
-      'extra',
-      'settings',
-      'creator',
-      ['created_at', 'createdAt'],
-      ['updated_at', 'updatedAt'],
+      [['item', 'id'], ['id']],
+      [['item', 'name'], ['name']],
+      [['item', 'description'], ['description']],
+      [['item', 'type'], ['type']],
+      [['item', 'path'], ['path']],
+      [['item', 'extra'], ['extra']],
+      [['item', 'settings'], ['settings']],
+      [['item', 'creator'], ['creator']],
+      [['item', 'created_at'], ['createdAt']],
+      [['item', 'updated_at'], ['updatedAt']],
     ].map((c) =>
-      !Array.isArray(c)
-        ? sql.identifier([c])
-        : sql.join(
-          c.map((cwa) => sql.identifier([cwa])),
-          sql` AS `,
-        ),
-    ),
-    sql`, `,
-  );
-
-  private static allColumnsItemId = sql.join(
-    [
-      ['item_id', 'itemId'],
-    ].map((c) =>
-      !Array.isArray(c)
-        ? sql.identifier([c])
-        : sql.join(
-          c.map((cwa) => sql.identifier([cwa])),
-          sql` AS `,
-        ),
+      sql.join(
+        c.map((cwa) => sql.identifier(cwa)),
+        sql` AS `,
+      ),
     ),
     sql`, `,
   );
@@ -71,44 +52,35 @@ export class CategoryService {
     dbHandler: TrxHandler,
   ): Promise<Category[]> {
     if (!types)
-      return (
-        dbHandler
-          .query<Category>(
-            sql`
+      return dbHandler
+        .query<Category>(
+          sql`
         SELECT *
         FROM category
       `,
-          )
-          .then(({ rows }) => rows.slice(0))
-      );
-    if (typeof types == 'string')
-      types = [types];
-    return (
-      dbHandler
-        .query<Category>(
-          sql`
+        )
+        .then(({ rows }) => rows.slice(0));
+    if (typeof types == 'string') types = [types];
+    return dbHandler
+      .query<Category>(
+        sql`
         SELECT *
         FROM category
         WHERE type IN (${sql.join(types, sql`, `)})
       `,
-        )
-        .then(({ rows }) => rows.slice(0))
-    );
+      )
+      .then(({ rows }) => rows.slice(0));
   }
 
-  async getCategories(
-    dbHandler: TrxHandler,
-  ): Promise<Category[]> {
-    return (
-      dbHandler
-        .query<Category>(
-          sql`
+  async getCategories(dbHandler: TrxHandler): Promise<Category[]> {
+    return dbHandler
+      .query<Category>(
+        sql`
         SELECT *
         FROM category
       `,
-        )
-        .then(({ rows }) => rows.slice(0))
-    );
+      )
+      .then(({ rows }) => rows.slice(0));
   }
 
   /**
@@ -116,37 +88,28 @@ export class CategoryService {
    * @param id Category's id
    * @param dbHandler Database handler
    */
-  async getCategory(
-    id: string,
-    dbHandler: TrxHandler,
-  ): Promise<Category> {
-    return (
-      dbHandler
-        .query<Category>(
-          sql`
+  async getCategory(id: string, dbHandler: TrxHandler): Promise<Category> {
+    return dbHandler
+      .query<Category>(
+        sql`
         SELECT *
         FROM category
         WHERE id = ${id}
         `,
-        )
-        .then(({ rows }) => rows[0] || null)
-    );
+      )
+      .then(({ rows }) => rows[0] || null);
   }
 
   // Get category types
-  async getCategoryTypes(
-    dbHandler: TrxHandler,
-  ): Promise<CategoryType[]> {
-    return (
-      dbHandler
-        .query<CategoryType>(
-          sql`
+  async getCategoryTypes(dbHandler: TrxHandler): Promise<CategoryType[]> {
+    return dbHandler
+      .query<CategoryType>(
+        sql`
         SELECT *
         FROM category_type
         `,
-        )
-        .then(({ rows }) => rows.slice(0))
-    );
+      )
+      .then(({ rows }) => rows.slice(0));
   }
 
   /**
@@ -158,70 +121,68 @@ export class CategoryService {
     id: string,
     dbHandler: TrxHandler,
   ): Promise<ItemCategory[]> {
-    return (
-      dbHandler
-        .query<ItemCategory>(
-          sql`
+    return dbHandler
+      .query<ItemCategory>(
+        sql`
         SELECT ${CategoryService.allColumns}
         FROM item_category
         WHERE item_id = ${id}
         `,
-        )
-        .then(({ rows }) => rows.slice(0))
-    );
+      )
+      .then(({ rows }) => rows.slice(0));
   }
 
-  // Get itemCategories matching given category(s)
-  async getItemsByCategory(
+  // Get itemCategories matching given category(s) (intersection)
+  async getItemsByCategories(
     ids: string[],
     dbHandler: TrxHandler,
-  ): Promise<string[]> {
-    if (typeof ids == 'string')
-      return (
-        dbHandler
-          .query<string>(
-            sql`
-          SELECT ${CategoryService.allColumnsItemId}
-          FROM item_category
-          WHERE category_id = ${ids}
-          `,
-          )
-          .then(({ rows }) => rows.slice(0))
-      );
+  ): Promise<Item[]> {
     return (
       dbHandler
-        .query<string>(
+        .query<Item & { total: number }>(
           sql`
-        WITH temp AS (
-          SELECT item_id FROM item_category
-          WHERE category_id = ${ids[0]}
-        )
-        SELECT ${CategoryService.allColumnsItemId} FROM item_category
+        SELECT ${CategoryService.allColumnsItemForJoins} 
+        FROM item_category
         LEFT JOIN item ON item.id = item_category.item_id  
-        WHERE category_id = ${ids[1]} and item_id IN (SELECT item_id FROM temp)
+        WHERE category_id IN (${sql.join(ids, sql`, `)}) 
         `,
         )
-        .then(({ rows }) => rows.slice(0))
+        // group by item id, return only entries with equal number of category ids
+        .then(({ rows }) => {
+          const d = Object.values(groupBy(rows, 'id')).map((items) =>
+            (items as Item[]).length === ids.length ? items[0] : null,
+          ) as Item[];
+          return d.filter(Boolean);
+        })
     );
   }
 
-  async createItemCategory(itemId: string, categoryId: string, transactionHandler: TrxHandler): Promise<ItemCategory> {
-    return transactionHandler.query<ItemCategory>(sql`
+  async createItemCategory(
+    itemId: string,
+    categoryId: string,
+    transactionHandler: TrxHandler,
+  ): Promise<ItemCategory> {
+    return transactionHandler
+      .query<ItemCategory>(
+        sql`
         INSERT INTO item_category (item_id, category_id)
         VALUES (${itemId}, ${categoryId})
         ON CONFLICT DO NOTHING
         RETURNING ${CategoryService.allColumns}
-      `)
+      `,
+      )
       .then(({ rows }) => rows[0] || null);
   }
 
-  async delete(id: string, transactionHandler: TrxHandler): Promise<Number> {
-    return transactionHandler.query<Number>(sql`
+  async delete(id: string, transactionHandler: TrxHandler): Promise<number> {
+    return transactionHandler
+      .query<number>(
+        sql`
         DELETE FROM item_category
         WHERE id = ${id}
         RETURNING *
-      `)
+      `,
+      )
       .then(({ rows }) => rows[0] || null);
   }
-
 }

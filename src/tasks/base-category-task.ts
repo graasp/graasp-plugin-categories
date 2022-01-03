@@ -1,7 +1,14 @@
 // global
 import { FastifyLoggerInstance } from 'fastify';
-import { Actor, Task, TaskStatus, IndividualResultType, PreHookHandlerType, PostHookHandlerType, DatabaseTransactionHandler } from 'graasp';
-import { Member } from 'graasp';
+import {
+  Actor,
+  Task,
+  TaskStatus,
+  IndividualResultType,
+  PreHookHandlerType,
+  PostHookHandlerType,
+  DatabaseTransactionHandler,
+} from 'graasp';
 // local
 import { CategoryService } from '../db-service';
 
@@ -10,7 +17,7 @@ export abstract class BaseCategoryTask<R> implements Task<Actor, R> {
   protected _result: R;
   protected _message: string;
 
-  readonly actor: Member;
+  readonly actor: Actor;
 
   status: TaskStatus;
   targetId: string;
@@ -18,15 +25,22 @@ export abstract class BaseCategoryTask<R> implements Task<Actor, R> {
   preHookHandler: PreHookHandlerType<R>;
   postHookHandler: PostHookHandlerType<R>;
 
-  constructor(actor: Member, categoryService: CategoryService) {
+  constructor(actor: Actor, categoryService: CategoryService) {
     this.actor = actor;
     this.categoryService = categoryService;
     this.status = 'NEW';
   }
 
   abstract get name(): string;
-  get result(): R { return this._result; }
-  get message(): string { return this._message; }
+  get result(): R {
+    return this._result;
+  }
+  get message(): string {
+    return this._message;
+  }
 
-  abstract run(handler: DatabaseTransactionHandler, log?: FastifyLoggerInstance): Promise<void | BaseCategoryTask<R>[]>;
+  abstract run(
+    handler: DatabaseTransactionHandler,
+    log?: FastifyLoggerInstance,
+  ): Promise<void | BaseCategoryTask<R>[]>;
 }

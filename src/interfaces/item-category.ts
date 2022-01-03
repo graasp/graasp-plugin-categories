@@ -1,6 +1,5 @@
 export interface ItemCategory {
-    id: string
-    itemId: string;
-    categoryId: string;
+  id: string;
+  itemId: string;
+  categoryId: string;
 }
-  
