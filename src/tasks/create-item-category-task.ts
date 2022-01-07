@@ -29,7 +29,7 @@ export class CreateItemCategoryTask extends BaseCategoryTask<ItemCategory> {
 
   async run(
     handler: DatabaseTransactionHandler,
-    log: FastifyLoggerInstance,
+    _log: FastifyLoggerInstance,
   ): Promise<void> {
     this.status = 'RUNNING';
 

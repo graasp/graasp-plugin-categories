@@ -1,6 +1,6 @@
 // global
 import { Item } from 'graasp';
-import { sql, DatabaseTransactionConnectionType as TrxHandler } from 'slonik';
+import { sql, DatabaseTransactionConnection as TrxHandler } from 'slonik';
 // local
 import { Category } from './interfaces/category';
 import { CategoryType } from './interfaces/category-type';
@@ -16,9 +16,9 @@ export class CategoryService {
       !Array.isArray(c)
         ? sql.identifier([c])
         : sql.join(
-          c.map((cwa) => sql.identifier([cwa])),
-          sql` AS `,
-        ),
+            c.map((cwa) => sql.identifier([cwa])),
+            sql` AS `,
+          ),
     ),
     sql`, `,
   );
