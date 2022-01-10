@@ -1,5 +1,5 @@
 // global
-import { Actor, ItemService, Member } from 'graasp';
+import { Actor, Member } from 'graasp';
 // local
 import { CategoryService } from './db-service';
 import { GetCategoryTask } from './tasks/get-category-task';
@@ -13,11 +13,9 @@ import { getItemsByCategoriesTask } from './tasks/get-items-by-category-task';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
-  private itemService: ItemService;
 
   constructor(categoryService: CategoryService) {
     this.categoryService = categoryService;
-    this.itemService = this.itemService;
   }
 
   // CRUD
