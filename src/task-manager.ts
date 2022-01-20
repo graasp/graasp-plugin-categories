@@ -67,7 +67,7 @@ export class TaskManager implements CategoryTaskManager {
 
   createGetItemsByCategoriesTask(
     member: Actor,
-    categoryIds: string[],
+    categoryIds: string[][],
   ): getItemsByCategoriesTask {
     return new getItemsByCategoriesTask(member, this.categoryService, {
       categoryIds,

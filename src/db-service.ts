@@ -44,6 +44,29 @@ export class CategoryService {
     sql`, `,
   );
 
+  private static allItemColumns = sql.join(
+    [
+      'id',
+      'name',
+      'description',
+      'type',
+      'path',
+      'extra',
+      'settings',
+      'creator',
+      ['created_at', 'createdAt'],
+      ['updated_at', 'updatedAt'],
+    ].map((c) =>
+      !Array.isArray(c)
+        ? sql.identifier([c])
+        : sql.join(
+            c.map((cwa) => sql.identifier([cwa])),
+            sql` AS `,
+          ),
+    ),
+    sql`, `,
+  );
+
   /**
    * Get all categories in given types
    */
@@ -134,27 +157,41 @@ export class CategoryService {
 
   // Get itemCategories matching given category(s) (intersection)
   async getItemsByCategories(
-    ids: string[],
+    ids: string[][],
     dbHandler: TrxHandler,
   ): Promise<Item[]> {
-    return (
+    return
       dbHandler
         .query<Item & { total: number }>(
+        //   sql`
+        // SELECT ${CategoryService.allColumnsItemForJoins} 
+        // FROM item_category
+        // LEFT JOIN item ON item.id = item_category.item_id  
+        // WHERE category_id IN (${sql.join(ids[0], sql`, `)}) 
+        // `,
           sql`
-        SELECT ${CategoryService.allColumnsItemForJoins} 
+        WITH selectedItemIds AS (
+        SELECT levelItem.item_id AS id
+        FROM (
+        SELECT item_id
         FROM item_category
-        LEFT JOIN item ON item.id = item_category.item_id  
-        WHERE category_id IN (${sql.join(ids, sql`, `)}) 
+        WHERE category_id IN (${sql.join(ids[0], sql`, `)})
+        GROUP BY item_id
+        ) AS levelItem
+        INNER JOIN (
+        SELECT item_id
+        FROM item_category
+        WHERE category_id IN ('${sql.join(ids[1], sql`, `)})
+        GROUP BY item_id
+        ) AS disciplineItem
+        ON levelItem.item_id = disciplineItem.item_id
+        ) SELECT ${CategoryService.allItemColumns}
+        FROM item
+        WHERE id in (SELECT id FROM selectedItemIds)
         `,
         )
         // group by item id, return only entries with equal number of category ids
-        .then(({ rows }) => {
-          const d = Object.values(groupBy(rows, 'id')).map((items) =>
-            (items as Item[]).length === ids.length ? items[0] : null,
-          ) as Item[];
-          return d.filter(Boolean);
-        })
-    );
+        .then(({ rows }) => rows.slice(0));
   }
 
   async createItemCategory(

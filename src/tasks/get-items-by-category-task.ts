@@ -4,7 +4,7 @@ import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
 
-type InputType = { categoryIds?: string[] };
+type InputType = { categoryIds?: string[][] };
 
 export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
   input: InputType;

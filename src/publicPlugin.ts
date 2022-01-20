@@ -74,7 +74,7 @@ const publicPlugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get published items in given categories
-  fastify.get<{ Querystring: { categoryId: string[] } }>(
+  fastify.get<{ Querystring: { categoryId: string[][] } }>(
     '/with-categories',
     { schema: getByCategories },
     async ({ query: { categoryId: categoryIds }, log }) => {
