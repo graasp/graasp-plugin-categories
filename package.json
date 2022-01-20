@@ -31,7 +31,7 @@
   "homepage": "https://github.com/graasp/graasp-plugin-categories#readme",
   "dependencies": {
     "graasp-plugin-public": "github:graasp/graasp-plugin-public",
-    "qs": "6.10.2"
+    "qs": "6.10.3"
   },
   "devDependencies": {
     "@commitlint/cli": "16.0.1",

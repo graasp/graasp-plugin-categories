@@ -5,7 +5,6 @@ import { sql, DatabaseTransactionConnection as TrxHandler } from 'slonik';
 import { Category } from './interfaces/category';
 import { CategoryType } from './interfaces/category-type';
 import { ItemCategory } from './interfaces/item-category';
-import { groupBy } from './utils';
 
 /**
  * Database's first layer of abstraction for Categorys
@@ -66,6 +65,13 @@ export class CategoryService {
     ),
     sql`, `,
   );
+
+  private static whereClause = (ids: string[][]) => {
+    if (ids.length > 1)
+      { return sql`WHERE category_id IN (${sql.join(ids[1], sql`, `)})`; }
+    else
+      { return sql``; }
+  };
 
   /**
    * Get all categories in given types
@@ -160,16 +166,10 @@ export class CategoryService {
     ids: string[][],
     dbHandler: TrxHandler,
   ): Promise<Item[]> {
-    return
-      dbHandler
-        .query<Item & { total: number }>(
-        //   sql`
-        // SELECT ${CategoryService.allColumnsItemForJoins} 
-        // FROM item_category
-        // LEFT JOIN item ON item.id = item_category.item_id  
-        // WHERE category_id IN (${sql.join(ids[0], sql`, `)}) 
-        // `,
-          sql`
+    // This sql query first select item_ids that match given categories in each type, find the intersection of item_ids by inner join, and lastly get items by ids
+    return dbHandler
+      .query<Item>(
+        sql`
         WITH selectedItemIds AS (
         SELECT levelItem.item_id AS id
         FROM (
@@ -181,17 +181,16 @@ export class CategoryService {
         INNER JOIN (
         SELECT item_id
         FROM item_category
-        WHERE category_id IN ('${sql.join(ids[1], sql`, `)})
+        ${CategoryService.whereClause(ids)}
         GROUP BY item_id
         ) AS disciplineItem
         ON levelItem.item_id = disciplineItem.item_id
-        ) SELECT ${CategoryService.allItemColumns}
+        ) 
+        SELECT ${CategoryService.allItemColumns}
         FROM item
-        WHERE id in (SELECT id FROM selectedItemIds)
+        WHERE id IN (SELECT id FROM selectedItemIds)
         `,
-        )
-        // group by item id, return only entries with equal number of category ids
-        .then(({ rows }) => rows.slice(0));
+      ).then(({ rows }) => rows.slice(0));
   }
 
   async createItemCategory(

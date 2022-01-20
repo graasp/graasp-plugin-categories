@@ -145,7 +145,6 @@ export const getByCategories = {
     properties: {
       categoryId: {
         type: 'array',
-        items: { $ref: 'http://graasp.org/#/definitions/uuid' },
       },
     },
     additionalProperties: false,

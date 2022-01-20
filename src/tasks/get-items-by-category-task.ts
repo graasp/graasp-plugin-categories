@@ -4,7 +4,7 @@ import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
 
-type InputType = { categoryIds?: string[][] };
+type InputType = { categoryIds?: string[] };
 
 export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
   input: InputType;
@@ -27,12 +27,11 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
     this.status = 'RUNNING';
 
     const { categoryIds } = this.input;
-    this.targetId = categoryIds?.join(',');
+    const categoryIdList = categoryIds.map((str) => str.split(','));
     const items = await this.categoryService.getItemsByCategories(
-      categoryIds,
+      categoryIdList,
       handler,
     );
-
     this.status = 'OK';
     this._result = items;
   }
