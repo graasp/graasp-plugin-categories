@@ -163,32 +163,17 @@ export class CategoryService {
 
   // Get itemCategories matching given category(s) (intersection)
   async getItemsByCategories(
-    ids: string[][],
+    ids: string[],
     dbHandler: TrxHandler,
   ): Promise<Item[]> {
     // This sql query first select item_ids that match given categories in each type, find the intersection of item_ids by inner join, and lastly get items by ids
     return dbHandler
       .query<Item>(
         sql`
-        WITH selectedItemIds AS (
-        SELECT levelItem.item_id AS id
-        FROM (
         SELECT item_id
         FROM item_category
-        WHERE category_id IN (${sql.join(ids[0], sql`, `)})
+        WHERE category_id IN (${sql.join(ids, sql`, `)})
         GROUP BY item_id
-        ) AS levelItem
-        INNER JOIN (
-        SELECT item_id
-        FROM item_category
-        ${CategoryService.whereClause(ids)}
-        GROUP BY item_id
-        ) AS disciplineItem
-        ON levelItem.item_id = disciplineItem.item_id
-        ) 
-        SELECT ${CategoryService.allItemColumns}
-        FROM item
-        WHERE id IN (SELECT id FROM selectedItemIds)
         `,
       ).then(({ rows }) => rows.slice(0));
   }

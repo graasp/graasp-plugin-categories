@@ -85,20 +85,20 @@ const publicPlugin: FastifyPluginAsync = async (fastify) => {
 
       // use item manager task to get trigger post hooks (deleted items are removed)
       // todo: use filter out of deleted items?
-      // const t2 = iTM.createGetManyTask(graaspActor);
-      // t2.getInput = () => ({
-      //   itemIds: t1.result.map(({ id }) => id),
-      // });
+      const t2 = iTM.createGetManyTask(graaspActor);
+      t2.getInput = () => ({
+        itemIds: t1.result.map(({ id }) => id),
+      });
 
       // filter out to keep parent published items only
       const t3 = pITM.createFilterPublicItemsTask(graaspActor, {
         tagIds: [publishedTagId],
       });
       t3.getInput = () => ({
-        items: t1.result as Item[],
+        items: t2.result as Item[],
       });
 
-      return runner.runSingleSequence([t1, t3], log);
+      return runner.runSingleSequence([t1, t2, t3], log);
     },
   );
 

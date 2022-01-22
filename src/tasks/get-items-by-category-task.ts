@@ -1,5 +1,6 @@
 // global
 import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
+import { ListToken } from 'slonik/dist/src/tokens';
 // local
 import { CategoryService } from '../db-service';
 import { BaseCategoryTask } from './base-category-task';
@@ -27,11 +28,20 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
     this.status = 'RUNNING';
 
     const { categoryIds } = this.input;
-    const categoryIdList = categoryIds.map((str) => str.split(','));
-    const items = await this.categoryService.getItemsByCategories(
-      categoryIdList,
-      handler,
-    );
+    
+    const itemIdsList = await Promise.all(categoryIds.map(async (idString) => {
+      const categoryIdList = idString.split(',');
+      const itemIds = await this.categoryService.getItemsByCategories(
+        categoryIdList,
+        handler
+      );
+      return itemIds;
+    }));
+
+    console.log(itemIdsList);
+    const itemIds = itemIdsList.reduce((a, b) => a.filter(c => b.includes(c)));
+
+    const items = itemIds;
     this.status = 'OK';
     this._result = items;
   }
