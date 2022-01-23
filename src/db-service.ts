@@ -170,7 +170,7 @@ export class CategoryService {
     return dbHandler
       .query<Item>(
         sql`
-        SELECT item_id
+        SELECT item_id AS id
         FROM item_category
         WHERE category_id IN (${sql.join(ids, sql`, `)})
         GROUP BY item_id

@@ -1,8 +1,8 @@
 // global
 import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
-import { ListToken } from 'slonik/dist/src/tokens';
 // local
 import { CategoryService } from '../db-service';
+import { getItemIdsArray } from '../utils';
 import { BaseCategoryTask } from './base-category-task';
 
 type InputType = { categoryIds?: string[] };
@@ -38,9 +38,7 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
       return itemIds;
     }));
 
-    console.log(itemIdsList);
-    const itemIds = itemIdsList.reduce((a, b) => a.filter(c => b.includes(c)));
-
+    const itemIds = itemIdsList.length > 1 ? itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id))) : itemIdsList[0];
     const items = itemIds;
     this.status = 'OK';
     this._result = items;
