@@ -38,8 +38,7 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
       return itemIds;
     }));
 
-    const itemIds = itemIdsList.length > 1 ? itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id))) : itemIdsList[0];
-    const items = itemIds;
+    const items = itemIdsList.length > 1 ? itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id))) : itemIdsList[0];
     this.status = 'OK';
     this._result = items;
   }
