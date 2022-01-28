@@ -34,12 +34,12 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
       const itemIds = await this.categoryService.getItemsByCategories(
         categoryIdList,
         handler
-      );
+      ).catch((err) => []);
       return itemIds;
-    }));
+    })).catch((err) => [[]]);
     
     // get the intersection of itemIdsList
-    const items = itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id)));
+    const items = itemIdsList?.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id)));
     this.status = 'OK';
     this._result = items;
   }
