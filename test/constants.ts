@@ -1,4 +1,4 @@
-import { Item, ItemMembership, Member } from 'graasp';
+import { Actor, Item, ItemMembership, Member } from 'graasp';
 import { v4 } from 'uuid';
 import { ItemCategory } from '../src';
 import { Category } from '../src/interfaces/category';
@@ -79,3 +79,28 @@ export const buildItem = (): Item => {
     },
   };
 };
+
+export const GRAASP_ACTOR: Actor = {
+  id: 'actorid',
+};
+
+export const CATEGORY_IDS_LIST = [
+  `${v4()},${v4()}`,
+  v4()
+];
+
+export const MOCK_ITEM_IDS_LIST = [
+  [
+    {id: 'id1'},
+    {id: 'id2'},
+  ],
+  [ 
+    {id: 'id3'},
+    {id: 'id2'},
+  ],
+];
+
+export const MOCK_ITEM_IDS_LIST_INTERSECTION = [
+  {id: 'id2'}
+];
+

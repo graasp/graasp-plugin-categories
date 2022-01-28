@@ -66,13 +66,6 @@ export class CategoryService {
     sql`, `,
   );
 
-  private static whereClause = (ids: string[][]) => {
-    if (ids.length > 1)
-      { return sql`WHERE category_id IN (${sql.join(ids[1], sql`, `)})`; }
-    else
-      { return sql``; }
-  };
-
   /**
    * Get all categories in given types
    */
