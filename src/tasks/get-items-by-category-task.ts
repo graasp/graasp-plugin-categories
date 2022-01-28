@@ -37,8 +37,9 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
       );
       return itemIds;
     }));
-
-    const items = itemIdsList.length > 1 ? itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id))) : itemIdsList[0];
+    
+    // get the intersection of itemIdsList
+    const items = itemIdsList.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id)));
     this.status = 'OK';
     this._result = items;
   }
