@@ -18,8 +18,7 @@ describe('Get Items By Categories  ', () => {
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
     jest.spyOn(Promise, 'all').mockImplementation(async () => result);
-    await task.run(handler);
-    expect(task.result).toEqual(intersection);
+    expect(task.run(handler)).rejects.toEqual(intersection);
   });
 
   it('get intersection with list length be 1', async () => {
@@ -28,7 +27,6 @@ describe('Get Items By Categories  ', () => {
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
     jest.spyOn(Promise, 'all').mockImplementation(async () => result);
-    await task.run(handler);
-    expect(task.result).toEqual(MOCK_ITEM_IDS_LIST[0]);
+    expect(task.run(handler)).rejects.toEqual(MOCK_ITEM_IDS_LIST[0]);
   });
 });
