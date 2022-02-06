@@ -86,7 +86,7 @@ export const GRAASP_ACTOR: Actor = {
 
 // the query string from frontend is in the form of ['A1,A2', 'B1', 'C1,C2,C3']
 // where A, B, C denote different category types, and 1, 2 denote different categories within same type
-// in test, I choose an example with two categories in one type, and one category in another type to test the intersection
+// in test, I choose an example with two categories in one type, and one category in another type to test the syntax
 export const CATEGORY_IDS_LIST = [
   `${v4()},${v4()}`,
   v4()
