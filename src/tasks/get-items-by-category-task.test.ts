@@ -18,7 +18,7 @@ describe('Get Items By Categories  ', () => {
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
     jest.spyOn(categoryService, 'getItemsByCategories').mockImplementation(async (categoryIdList) => categoryIdList.length > 1 ? result[0] : result[1]);
-    await task.run(handler).catch((err) => console.log(err));
+    await task.run(handler);
     expect(task.result).toEqual(intersection);
   });
 
@@ -27,8 +27,8 @@ describe('Get Items By Categories  ', () => {
     const result = [MOCK_ITEM_IDS_LIST[0]];
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
-    jest.spyOn(Promise, 'all').mockImplementation(async () => result);
-    await task.run(handler).catch((err) => console.log(err));
+    jest.spyOn(categoryService, 'getItemsByCategories').mockImplementation(async (categoryIdList) => categoryIdList.length > 1 ? result[0] : result[1]);
+    await task.run(handler);
     expect(task.result).toEqual(MOCK_ITEM_IDS_LIST[0]);
   });
 });
