@@ -96,11 +96,11 @@ export const MOCK_ITEM_IDS_LIST = [
   [
     {id: 'id1'},
     {id: 'id2'},
-  ],
+  ] as Item[],  // just for test
   [ 
     {id: 'id3'},
     {id: 'id2'},
-  ],
+  ] as Item[],
 ];
 
 export const MOCK_ITEM_IDS_LIST_INTERSECTION = [

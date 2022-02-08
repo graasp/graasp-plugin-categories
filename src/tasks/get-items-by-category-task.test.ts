@@ -17,7 +17,7 @@ describe('Get Items By Categories  ', () => {
     const intersection = MOCK_ITEM_IDS_LIST_INTERSECTION;
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
-    jest.spyOn(Promise, 'all').mockImplementation(async () => result);
+    jest.spyOn(categoryService, 'getItemsByCategories').mockImplementation(async (categoryIdList) => categoryIdList.length > 1 ? result[0] : result[1]);
     await task.run(handler).catch((err) => console.log(err));
     expect(task.result).toEqual(intersection);
   });
