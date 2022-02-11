@@ -67,6 +67,12 @@ export default {
       },
       additionalProperties: false,
     },
+    concatenatedIds: {
+      type: 'string',
+      pattern:
+        '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}' +
+        '(,[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})*$',
+    },
   },
 };
 
@@ -145,7 +151,9 @@ export const getByCategories = {
     properties: {
       categoryId: {
         type: 'array',
-        items: { $ref: 'http://graasp.org/#/definitions/uuid' },
+        items: {
+          $ref: 'http://graasp.org/categories/#/definitions/concatenatedIds'
+        },
       },
     },
     additionalProperties: false,

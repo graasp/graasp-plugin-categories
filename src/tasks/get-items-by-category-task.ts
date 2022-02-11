@@ -2,6 +2,7 @@
 import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
 // local
 import { CategoryService } from '../db-service';
+import { getItemIdsArray } from '../utils';
 import { BaseCategoryTask } from './base-category-task';
 
 type InputType = { categoryIds?: string[] };
@@ -27,12 +28,18 @@ export class getItemsByCategoriesTask extends BaseCategoryTask<Item[]> {
     this.status = 'RUNNING';
 
     const { categoryIds } = this.input;
-    this.targetId = categoryIds?.join(',');
-    const items = await this.categoryService.getItemsByCategories(
-      categoryIds,
-      handler,
-    );
-
+    
+    const itemIdsList = await Promise.all(categoryIds.map(async (idString) => {
+      const categoryIdList = idString.split(',');
+      const itemIds = await this.categoryService.getItemsByCategories(
+        categoryIdList,
+        handler
+      );
+      return itemIds;
+    }));
+    
+    // get the intersection of itemIdsList
+    const items = itemIdsList?.reduce((a, b) => a.filter((c) => getItemIdsArray(b).includes(c.id)));
     this.status = 'OK';
     this._result = items;
   }

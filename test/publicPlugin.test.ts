@@ -177,7 +177,7 @@ describe('Public Categories', () => {
       const res = await app.inject({
         method: 'GET',
         url: `/with-categories${qs.stringify(
-          { categoryId: v4() },
+          { categoryId: [v4()] },
           { addQueryPrefix: true, arrayFormat: 'repeat' },
         )}`,
       });

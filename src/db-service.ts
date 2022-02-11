@@ -5,7 +5,6 @@ import { sql, DatabaseTransactionConnection as TrxHandler } from 'slonik';
 import { Category } from './interfaces/category';
 import { CategoryType } from './interfaces/category-type';
 import { ItemCategory } from './interfaces/item-category';
-import { groupBy } from './utils';
 
 /**
  * Database's first layer of abstraction for Categorys
@@ -40,6 +39,29 @@ export class CategoryService {
         c.map((cwa) => sql.identifier(cwa)),
         sql` AS `,
       ),
+    ),
+    sql`, `,
+  );
+
+  private static allItemColumns = sql.join(
+    [
+      'id',
+      'name',
+      'description',
+      'type',
+      'path',
+      'extra',
+      'settings',
+      'creator',
+      ['created_at', 'createdAt'],
+      ['updated_at', 'updatedAt'],
+    ].map((c) =>
+      !Array.isArray(c)
+        ? sql.identifier([c])
+        : sql.join(
+            c.map((cwa) => sql.identifier([cwa])),
+            sql` AS `,
+          ),
     ),
     sql`, `,
   );
@@ -137,24 +159,16 @@ export class CategoryService {
     ids: string[],
     dbHandler: TrxHandler,
   ): Promise<Item[]> {
-    return (
-      dbHandler
-        .query<Item & { total: number }>(
-          sql`
-        SELECT ${CategoryService.allColumnsItemForJoins} 
+    // This sql query first select item_ids that match given categories in each type, find the intersection of item_ids by inner join, and lastly get items by ids
+    return dbHandler
+      .query<Item>(
+        sql`
+        SELECT item_id AS id
         FROM item_category
-        LEFT JOIN item ON item.id = item_category.item_id  
-        WHERE category_id IN (${sql.join(ids, sql`, `)}) 
+        WHERE category_id IN (${sql.join(ids, sql`, `)})
+        GROUP BY item_id
         `,
-        )
-        // group by item id, return only entries with equal number of category ids
-        .then(({ rows }) => {
-          const d = Object.values(groupBy(rows, 'id')).map((items) =>
-            (items as Item[]).length === ids.length ? items[0] : null,
-          ) as Item[];
-          return d.filter(Boolean);
-        })
-    );
+      ).then(({ rows }) => rows.slice(0));
   }
 
   async createItemCategory(
