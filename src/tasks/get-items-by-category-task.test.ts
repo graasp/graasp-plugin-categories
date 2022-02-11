@@ -27,7 +27,7 @@ describe('Get Items By Categories  ', () => {
     const result = [MOCK_ITEM_IDS_LIST[0]];
 
     const task = new getItemsByCategoriesTask(actor, categoryService, input);
-    jest.spyOn(categoryService, 'getItemsByCategories').mockImplementation(async (categoryIdList) => categoryIdList.length > 1 ? result[0] : result[1]);
+    jest.spyOn(categoryService, 'getItemsByCategories').mockImplementation(async () => result[0]);
     await task.run(handler);
     expect(task.result).toEqual(MOCK_ITEM_IDS_LIST[0]);
   });
