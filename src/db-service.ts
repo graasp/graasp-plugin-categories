@@ -199,4 +199,72 @@ export class CategoryService {
       )
       .then(({ rows }) => rows[0] || null);
   }
+
+  /**
+   * Create a new category type
+   * @param name name of new category type
+   * @param dbHandler Database handler
+   */
+  async CreateCategoryType(name: string, dbHandler: TrxHandler): Promise<CategoryType> {
+    return dbHandler
+      .query<CategoryType>(
+        sql`
+        INSERT INTO category_type (name)
+        VALUES (${name})
+        RETURNING *
+        `,
+      )
+      .then(({ rows }) => rows[0]);
+  }
+
+  /**
+   * Delete a category type
+   * @param id id of the category type to be deleted
+   * @param dbHandler Database handler
+   */
+   async DeleteCategoryType(id: string, dbHandler: TrxHandler): Promise<CategoryType> {
+    return dbHandler
+      .query<CategoryType>(
+        sql`
+        DELETE FROM category_type
+        WHERE id = ${id}
+        RETURNING *
+        `,
+      )
+      .then(({ rows }) => rows[0]);
+  }
+
+    /**
+   * Create a new category
+   * @param name name of new category type
+   * @param dbHandler Database handler
+   */
+  async CreateCategory(name: string, categoryTypeId: string, dbHandler: TrxHandler): Promise<Category> {
+    return dbHandler
+      .query<Category>(
+        sql`
+        INSERT INTO category (name, type)
+        VALUES (${name}, ${categoryTypeId})
+        RETURNING *
+        `,
+      )
+      .then(({ rows }) => rows[0]);
+  }
+
+  /**
+   * Delete a category
+   * @param id id of the category to be deleted
+   * @param dbHandler Database handler
+   */
+   async DeleteCategory(id: string, dbHandler: TrxHandler): Promise<Category> {
+    return dbHandler
+      .query<Category>(
+        sql`
+        DELETE FROM category
+        WHERE id = ${id}
+        RETURNING *
+        `,
+      )
+      .then(({ rows }) => rows[0]);
+  }
 }
