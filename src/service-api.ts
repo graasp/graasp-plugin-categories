@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from 'fastify';
 
 // local
 import { CategoryService } from './db-service';
+import { ItemCategoryService } from './item-category-service';
 import common, { create, deleteOne, getItemCategories } from './schemas';
 import { TaskManager } from './task-manager';
 
@@ -13,7 +14,8 @@ const plugin: FastifyPluginAsync = async (fastify) => {
     itemMemberships: { taskManager: iMTM },
   } = fastify;
   const categoryS = new CategoryService();
-  const taskManager = new TaskManager(categoryS);
+  const itemCategoryService = new ItemCategoryService();
+  const taskManager = new TaskManager(categoryS, itemCategoryService);
 
   // schemas
   fastify.addSchema(common);

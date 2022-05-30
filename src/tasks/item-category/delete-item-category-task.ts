@@ -2,13 +2,13 @@
 import { DatabaseTransactionHandler } from 'graasp';
 // other services
 import { Member } from 'graasp';
-import { CategoryService } from '../db-service';
-import { BaseCategoryTask } from './base-category-task';
+import { ItemCategoryService } from '../../item-category-service';
+import { BaseItemCategoryTask } from '../base-item-category-task';
 // local
 
 type InputType = { itemCategoryId?: string };
 
-export class DeleteItemCategoryTask extends BaseCategoryTask<number> {
+export class DeleteItemCategoryTask extends BaseItemCategoryTask<number> {
   input: InputType;
   getInput: () => InputType;
 
@@ -19,9 +19,9 @@ export class DeleteItemCategoryTask extends BaseCategoryTask<number> {
   constructor(
     input: InputType,
     member: Member,
-    categoryService: CategoryService,
+    itemCategoryService: ItemCategoryService,
   ) {
-    super(member, categoryService);
+    super(member, itemCategoryService);
     this.input = input ?? {};
   }
 
@@ -31,7 +31,7 @@ export class DeleteItemCategoryTask extends BaseCategoryTask<number> {
     const { itemCategoryId } = this.input;
     this.targetId = itemCategoryId;
     // delete item category entry
-    const deleted = await this.categoryService.delete(itemCategoryId, handler);
+    const deleted = await this.itemCategoryService.delete(itemCategoryId, handler);
 
     // return item tags
     this.status = 'OK';

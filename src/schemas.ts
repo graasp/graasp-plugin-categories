@@ -180,3 +180,41 @@ export const deleteOne = {
     200: { $ref: 'http://graasp.org/categories/#/definitions/itemCategory' },
   },
 };
+
+export const createCategoryType = {
+  body: {
+    type: 'object',
+    required: ['name'],
+    properties: {
+      name: { type: 'string' },
+    },
+  },
+  response: {
+    200: { $ref: 'http://graasp.org/categories/#/definitions/categoryType' },
+  },
+};
+
+export const createCategory = {
+  body: {
+    type: 'object',
+    required: ['name', 'type'],
+    properties: {
+      name: { type: 'string' },
+      type: { $ref: 'http://graasp.org/#/definitions/uuid' },
+    },
+  },
+  response: {
+    200: { $ref: 'http://graasp.org/categories/#/definitions/category' },
+  },
+};
+
+export const deleteById = {
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: { $ref: 'http://graasp.org/#/definitions/uuid' },
+    },
+    additionalProperties: false,
+  },
+};

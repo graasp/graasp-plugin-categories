@@ -4,13 +4,13 @@ import { DatabaseTransactionHandler } from 'graasp';
 // other services
 import { Member } from 'graasp';
 // local
-import { CategoryService } from '../db-service';
-import { ItemCategory } from '../interfaces/item-category';
-import { BaseCategoryTask } from './base-category-task';
+import { ItemCategory } from '../../interfaces/item-category';
+import { ItemCategoryService } from '../../item-category-service';
+import { BaseItemCategoryTask } from '../base-item-category-task';
 
 type InputType = { itemId?: string; categoryId?: string };
 
-export class CreateItemCategoryTask extends BaseCategoryTask<ItemCategory> {
+export class CreateItemCategoryTask extends BaseItemCategoryTask<ItemCategory> {
   input: InputType;
   getInput: () => InputType;
 
@@ -21,9 +21,9 @@ export class CreateItemCategoryTask extends BaseCategoryTask<ItemCategory> {
   constructor(
     input: InputType,
     member: Member,
-    CategoryService: CategoryService,
+    itemCategoryService: ItemCategoryService,
   ) {
-    super(member, CategoryService);
+    super(member, itemCategoryService);
     this.input = input ?? {};
   }
 
@@ -36,7 +36,7 @@ export class CreateItemCategoryTask extends BaseCategoryTask<ItemCategory> {
     // create entry in item-category
     const { itemId, categoryId } = this.input;
     this.targetId = itemId;
-    this._result = await this.categoryService.createItemCategory(
+    this._result = await this.itemCategoryService.createItemCategory(
       itemId,
       categoryId,
       handler,

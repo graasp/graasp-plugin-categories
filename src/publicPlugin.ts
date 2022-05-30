@@ -5,6 +5,7 @@ import graaspPublicPlugin from 'graasp-plugin-public';
 
 // local
 import { CategoryService } from './db-service';
+import { ItemCategoryService } from './item-category-service';
 import common, {
   getByCategories,
   getCategories,
@@ -29,7 +30,8 @@ const publicPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addSchema(common);
 
   const categoryS = new CategoryService();
-  const categoryTaskManager = new TaskManager(categoryS);
+  const itemCategoryS = new ItemCategoryService();
+  const categoryTaskManager = new TaskManager(categoryS, itemCategoryS);
 
   if (!graaspPublicPlugin) {
     throw new Error('Public plugin is not correctly defined');

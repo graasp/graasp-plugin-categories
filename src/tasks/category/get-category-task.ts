@@ -1,9 +1,9 @@
 // global
 import { DatabaseTransactionHandler, Member } from 'graasp';
 // local
-import { CategoryService } from '../db-service';
-import { BaseCategoryTask } from './base-category-task';
-import { Category } from '../interfaces/category';
+import { CategoryService } from '../../db-service';
+import { BaseCategoryTask } from '../base-category-task';
+import { Category } from '../../interfaces/category';
 
 type InputType = { categoryId?: string };
 

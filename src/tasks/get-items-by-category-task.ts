@@ -1,7 +1,7 @@
 // global
 import { Actor, DatabaseTransactionHandler, Item } from 'graasp';
-// local
 import { CategoryService } from '../db-service';
+// local
 import { getItemIdsArray } from '../utils';
 import { BaseCategoryTask } from './base-category-task';
 

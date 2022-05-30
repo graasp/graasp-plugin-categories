@@ -64,3 +64,12 @@ CREATE TABLE item_category (
     FOREIGN KEY(item_id) REFERENCES item(id) ON DELETE CASCADE,
     FOREIGN KEY(category_id) REFERENCES category(id) ON DELETE CASCADE
 );
+
+-- Add language categories
+INSERT INTO category_type (id, name)
+VALUES ('34bf2823-480a-4dd7-9c0f-8b5bfbdec380', 'language');
+
+INSERT INTO category (name, type)
+VALUES ('English', '34bf2823-480a-4dd7-9c0f-8b5bfbdec380'),
+('French', '34bf2823-480a-4dd7-9c0f-8b5bfbdec380'),
+('German', '34bf2823-480a-4dd7-9c0f-8b5bfbdec380');
