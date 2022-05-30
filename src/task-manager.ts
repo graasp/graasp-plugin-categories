@@ -2,24 +2,27 @@
 import { Actor, Member } from 'graasp';
 // local
 import { CategoryService } from './db-service';
-import { GetCategoryTask } from './tasks/get-category-task';
-import { GetCategoriesByTypeTask } from './tasks/get-categories-by-type-task';
+import { GetCategoryTask } from './tasks/category/get-category-task';
+import { GetCategoriesByTypeTask } from './tasks/category/get-categories-by-type-task';
 import { CategoryTaskManager } from './interfaces/category-task-manager';
-import { GetItemCategoryTask } from './tasks/get-item-category-task';
-import { GetCategoryTypesTask } from './tasks/get-category-types-task';
-import { CreateItemCategoryTask } from './tasks/create-item-category-task';
-import { DeleteItemCategoryTask } from './tasks/delete-item-category-task';
+import { GetItemCategoryTask } from './tasks/item-category/get-item-category-task';
+import { GetCategoryTypesTask } from './tasks/category-type/get-category-types-task';
+import { CreateItemCategoryTask } from './tasks/item-category/create-item-category-task';
+import { DeleteItemCategoryTask } from './tasks/item-category/delete-item-category-task';
 import { getItemsByCategoriesTask } from './tasks/get-items-by-category-task';
-import { CreateCategoryTypeTask } from './tasks/create-category-type-task';
-import { DeleteCategoryTypeTask } from './tasks/delete-category-type-task';
-import { CreateCategoryTask } from './tasks/create-category-task';
-import { DeleteCategoryTask } from './tasks/delete-category-task';
+import { CreateCategoryTypeTask } from './tasks/category-type/create-category-type-task';
+import { DeleteCategoryTypeTask } from './tasks/category-type/delete-category-type-task';
+import { CreateCategoryTask } from './tasks/category/create-category-task';
+import { DeleteCategoryTask } from './tasks/category/delete-category-task';
+import { ItemCategoryService } from './item-category-service';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
+  private itemCategoryService: ItemCategoryService;
 
-  constructor(categoryService: CategoryService) {
+  constructor(categoryService: CategoryService, itemCategoryService: ItemCategoryService) {
     this.categoryService = categoryService;
+    this.itemCategoryService = itemCategoryService;
   }
 
   // CRUD
@@ -94,7 +97,7 @@ export class TaskManager implements CategoryTaskManager {
     member: Actor,
     itemId: string,
   ): GetItemCategoryTask {
-    return new GetItemCategoryTask(member, this.categoryService, { itemId });
+    return new GetItemCategoryTask(member, this.itemCategoryService, { itemId });
   }
 
   createCreateItemCategoryTask(
@@ -105,7 +108,7 @@ export class TaskManager implements CategoryTaskManager {
     return new CreateItemCategoryTask(
       { itemId: itemId, categoryId },
       member,
-      this.categoryService,
+      this.itemCategoryService,
     );
   }
 
@@ -116,13 +119,13 @@ export class TaskManager implements CategoryTaskManager {
     return new DeleteItemCategoryTask(
       { itemCategoryId },
       member,
-      this.categoryService,
+      this.itemCategoryService,
     );
   }
 
   createCreateCategoryTypeTask(member: Member, name: string): CreateCategoryTypeTask {
     return new CreateCategoryTypeTask(
-      { name: name },
+      { name },
       member,
       this.categoryService,
     );
@@ -130,7 +133,7 @@ export class TaskManager implements CategoryTaskManager {
 
   createDeleteCategoryTypeTask(member: Member, id: string): DeleteCategoryTypeTask {
     return new DeleteCategoryTypeTask(
-      { id: id },
+      { id },
       member,
       this.categoryService,
     );
@@ -138,7 +141,7 @@ export class TaskManager implements CategoryTaskManager {
   
   createCreateCategoryTask(member: Member, name: string, type: string): CreateCategoryTask {
     return new CreateCategoryTask(
-      { name: name, type: type },
+      { name, type },
       member,
       this.categoryService,
     );
@@ -146,7 +149,7 @@ export class TaskManager implements CategoryTaskManager {
 
   createDeleteCategoryTask(member: Member, id: string): DeleteCategoryTask {
     return new DeleteCategoryTask(
-      { id: id },
+      { id },
       member,
       this.categoryService,
     );

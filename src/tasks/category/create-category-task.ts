@@ -1,9 +1,9 @@
 // global
 import { DatabaseTransactionHandler, Member } from 'graasp';
 // local
-import { CategoryService } from '../db-service';
-import { Category } from '../interfaces/category';
-import { BaseCategoryTask } from './base-category-task';
+import { CategoryService } from '../../db-service';
+import { Category } from '../../interfaces/category';
+import { BaseCategoryTask } from '../base-category-task';
 
 type InputType = { name: string, type: string };
 
@@ -22,9 +22,8 @@ export class CreateCategoryTask extends BaseCategoryTask<Category> {
   async run(handler: DatabaseTransactionHandler): Promise<void> {
     this.status = 'RUNNING';
 
-    // get all types
     const { name, type } = this.input;
-    const category = await this.categoryService.CreateCategory(name, type, handler);
+    const category = await this.categoryService.createCategory(name, type, handler);
 
     this.status = 'OK';
     this._result = category;

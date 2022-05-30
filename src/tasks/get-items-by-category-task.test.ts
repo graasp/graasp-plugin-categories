@@ -1,7 +1,7 @@
 import { DatabaseTransactionHandler } from 'graasp';
 
-import { CategoryService } from '../db-service';
 import { CATEGORY_IDS_LIST, GRAASP_ACTOR, MOCK_ITEM_IDS_LIST, MOCK_ITEM_IDS_LIST_INTERSECTION } from '../../test/constants';
+import { CategoryService } from '../db-service';
 import { getItemsByCategoriesTask } from './get-items-by-category-task';
 
 const handler = {} as unknown as DatabaseTransactionHandler;

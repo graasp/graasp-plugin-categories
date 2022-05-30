@@ -1,13 +1,13 @@
 // global
 import { Actor, DatabaseTransactionHandler } from 'graasp';
 // local
-import { CategoryService } from '../db-service';
-import { BaseCategoryTask } from './base-category-task';
-import { ItemCategory } from '../interfaces/item-category';
+import { ItemCategory } from '../../interfaces/item-category';
+import { ItemCategoryService } from '../../item-category-service';
+import { BaseItemCategoryTask } from '../base-item-category-task';
 
 type InputType = { itemId?: string };
 
-export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
+export class GetItemCategoryTask extends BaseItemCategoryTask<ItemCategory[]> {
   input: InputType;
   getInput: () => InputType;
 
@@ -17,10 +17,10 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
 
   constructor(
     member: Actor,
-    categoryService: CategoryService,
+    itemCategoryService: ItemCategoryService,
     input: InputType,
   ) {
-    super(member, categoryService);
+    super(member, itemCategoryService);
     this.input = input ?? {};
   }
 
@@ -29,7 +29,7 @@ export class GetItemCategoryTask extends BaseCategoryTask<ItemCategory[]> {
 
     const { itemId } = this.input;
     this.targetId = itemId;
-    const itemCategories = await this.categoryService.getItemCategory(
+    const itemCategories = await this.itemCategoryService.getItemCategory(
       itemId,
       handler,
     );
