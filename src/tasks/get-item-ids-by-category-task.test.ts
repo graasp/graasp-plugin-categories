@@ -1,6 +1,8 @@
+import { v4 } from 'uuid';
+
 import { DatabaseTransactionHandler, Item } from '@graasp/sdk';
 
-import { CATEGORY_IDS_LIST, GRAASP_ACTOR } from '../../test/constants';
+import { GRAASP_ACTOR } from '../../test/constants';
 import { CategoryService } from '../db-service';
 import { GetItemIdsByCategoriesTask } from './get-item-ids-by-category-task';
 
@@ -16,6 +18,11 @@ export const MOCK_ITEM_IDS_LIST = [
 ];
 
 export const MOCK_ITEM_IDS_LIST_INTERSECTION = ['id2'];
+
+// the query string from frontend is in the form of ['A1,A2', 'B1', 'C1,C2,C3']
+// where A, B, C denote different category types, and 1, 2 denote different categories within same type
+// in test, I choose an example with two categories in one type, and one category in another type to test the syntax
+export const CATEGORY_IDS_LIST = [`${v4()},${v4()}`, v4()];
 
 describe('Get Items By Categories  ', () => {
   it('get intersection of itemIds list', async () => {
