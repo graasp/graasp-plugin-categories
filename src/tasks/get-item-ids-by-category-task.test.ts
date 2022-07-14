@@ -33,7 +33,7 @@ describe('Get Items By Categories  ', () => {
     expect(task.result).toEqual(intersection);
   });
 
-  it.only('get intersection with list length be 1', async () => {
+  it('get intersection with list length be 1', async () => {
     const input = { categoryIds: [CATEGORY_IDS_LIST[0]] };
     const result = [MOCK_ITEM_IDS_LIST[0]];
 
