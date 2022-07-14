@@ -1,26 +1,28 @@
-// global
-import { Actor, Member } from 'graasp';
-// local
+import { Actor, Member } from '@graasp/sdk';
+
 import { CategoryService } from './db-service';
-import { GetCategoryTask } from './tasks/category/get-category-task';
-import { GetCategoriesByTypeTask } from './tasks/category/get-categories-by-type-task';
 import { CategoryTaskManager } from './interfaces/category-task-manager';
-import { GetItemCategoryTask } from './tasks/item-category/get-item-category-task';
-import { GetCategoryTypesTask } from './tasks/category-type/get-category-types-task';
-import { CreateItemCategoryTask } from './tasks/item-category/create-item-category-task';
-import { DeleteItemCategoryTask } from './tasks/item-category/delete-item-category-task';
-import { getItemsByCategoriesTask } from './tasks/get-items-by-category-task';
+import { ItemCategoryService } from './item-category-service';
 import { CreateCategoryTypeTask } from './tasks/category-type/create-category-type-task';
 import { DeleteCategoryTypeTask } from './tasks/category-type/delete-category-type-task';
+import { GetCategoryTypesTask } from './tasks/category-type/get-category-types-task';
 import { CreateCategoryTask } from './tasks/category/create-category-task';
 import { DeleteCategoryTask } from './tasks/category/delete-category-task';
-import { ItemCategoryService } from './item-category-service';
+import { GetCategoriesByTypeTask } from './tasks/category/get-categories-by-type-task';
+import { GetCategoryTask } from './tasks/category/get-category-task';
+import { GetItemIdsByCategoriesTask } from './tasks/get-item-ids-by-category-task';
+import { CreateItemCategoryTask } from './tasks/item-category/create-item-category-task';
+import { DeleteItemCategoryTask } from './tasks/item-category/delete-item-category-task';
+import { GetItemCategoryTask } from './tasks/item-category/get-item-category-task';
 
 export class TaskManager implements CategoryTaskManager {
   private categoryService: CategoryService;
   private itemCategoryService: ItemCategoryService;
 
-  constructor(categoryService: CategoryService, itemCategoryService: ItemCategoryService) {
+  constructor(
+    categoryService: CategoryService,
+    itemCategoryService: ItemCategoryService,
+  ) {
     this.categoryService = categoryService;
     this.itemCategoryService = itemCategoryService;
   }
@@ -35,8 +37,8 @@ export class TaskManager implements CategoryTaskManager {
   getGetCategoryTaskName(): string {
     return GetCategoryTask.name;
   }
-  getgetItemsByCategoriesTaskName(): string {
-    return getItemsByCategoriesTask.name;
+  getGetItemIdsByCategoriesTaskName(): string {
+    return GetItemIdsByCategoriesTask.name;
   }
   getGetItemCategoryTaskName(): string {
     return GetItemCategoryTask.name;
@@ -84,11 +86,11 @@ export class TaskManager implements CategoryTaskManager {
     return new GetCategoryTypesTask(member, this.categoryService);
   }
 
-  createGetItemsByCategoriesTask(
+  createGetItemIdsByCategoriesTask(
     member: Actor,
     categoryIds: string[],
-  ): getItemsByCategoriesTask {
-    return new getItemsByCategoriesTask(member, this.categoryService, {
+  ): GetItemIdsByCategoriesTask {
+    return new GetItemIdsByCategoriesTask(member, this.categoryService, {
       categoryIds,
     });
   }
@@ -97,7 +99,9 @@ export class TaskManager implements CategoryTaskManager {
     member: Actor,
     itemId: string,
   ): GetItemCategoryTask {
-    return new GetItemCategoryTask(member, this.itemCategoryService, { itemId });
+    return new GetItemCategoryTask(member, this.itemCategoryService, {
+      itemId,
+    });
   }
 
   createCreateItemCategoryTask(
@@ -123,35 +127,29 @@ export class TaskManager implements CategoryTaskManager {
     );
   }
 
-  createCreateCategoryTypeTask(member: Member, name: string): CreateCategoryTypeTask {
-    return new CreateCategoryTypeTask(
-      { name },
-      member,
-      this.categoryService,
-    );
+  createCreateCategoryTypeTask(
+    member: Member,
+    name: string,
+  ): CreateCategoryTypeTask {
+    return new CreateCategoryTypeTask({ name }, member, this.categoryService);
   }
 
-  createDeleteCategoryTypeTask(member: Member, id: string): DeleteCategoryTypeTask {
-    return new DeleteCategoryTypeTask(
-      { id },
-      member,
-      this.categoryService,
-    );
+  createDeleteCategoryTypeTask(
+    member: Member,
+    id: string,
+  ): DeleteCategoryTypeTask {
+    return new DeleteCategoryTypeTask({ id }, member, this.categoryService);
   }
-  
-  createCreateCategoryTask(member: Member, name: string, type: string): CreateCategoryTask {
-    return new CreateCategoryTask(
-      { name, type },
-      member,
-      this.categoryService,
-    );
+
+  createCreateCategoryTask(
+    member: Member,
+    name: string,
+    type: string,
+  ): CreateCategoryTask {
+    return new CreateCategoryTask({ name, type }, member, this.categoryService);
   }
 
   createDeleteCategoryTask(member: Member, id: string): DeleteCategoryTask {
-    return new DeleteCategoryTask(
-      { id },
-      member,
-      this.categoryService,
-    );
+    return new DeleteCategoryTask({ id }, member, this.categoryService);
   }
 }

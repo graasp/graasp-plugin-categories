@@ -1,7 +1,6 @@
-// global
-import { sql, DatabaseTransactionConnection as TrxHandler } from 'slonik';
+import { DatabaseTransactionConnection as TrxHandler, sql } from 'slonik';
+
 import { CategoryService } from './db-service';
-// local
 import { ItemCategory } from './interfaces/item-category';
 
 /**

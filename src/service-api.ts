@@ -1,7 +1,5 @@
-// global
 import { FastifyPluginAsync } from 'fastify';
 
-// local
 import { CategoryService } from './db-service';
 import { ItemCategoryService } from './item-category-service';
 import common, { create, deleteOne, getItemCategories } from './schemas';

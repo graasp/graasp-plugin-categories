@@ -1,6 +1,5 @@
-// global
-import { Actor, Task } from 'graasp';
-// local
+import { Actor, Task } from '@graasp/sdk';
+
 import { Category } from './category';
 import { ItemCategory } from './item-category';
 

@@ -1,6 +1,5 @@
-// global
-import { Actor, DatabaseTransactionHandler } from 'graasp';
-// local
+import { Actor, DatabaseTransactionHandler, TaskStatus } from '@graasp/sdk';
+
 import { ItemCategory } from '../../interfaces/item-category';
 import { ItemCategoryService } from '../../item-category-service';
 import { BaseItemCategoryTask } from '../base-item-category-task';
@@ -25,7 +24,7 @@ export class GetItemCategoryTask extends BaseItemCategoryTask<ItemCategory[]> {
   }
 
   async run(handler: DatabaseTransactionHandler): Promise<void> {
-    this.status = 'RUNNING';
+    this.status = TaskStatus.RUNNING;
 
     const { itemId } = this.input;
     this.targetId = itemId;
@@ -34,7 +33,7 @@ export class GetItemCategoryTask extends BaseItemCategoryTask<ItemCategory[]> {
       handler,
     );
 
-    this.status = 'OK';
+    this.status = TaskStatus.OK;
     this._result = itemCategories;
   }
 }

@@ -1,14 +1,16 @@
+import { StatusCodes } from 'http-status-codes';
+import { v4 } from 'uuid';
+
 import {
   ItemMembershipTaskManager,
   ItemTaskManager,
   TaskRunner,
 } from 'graasp-test';
 import MockTask from 'graasp-test/src/tasks/task';
-import { StatusCodes } from 'http-status-codes';
-import { v4 } from 'uuid';
+
 import plugin from '../src/service-api';
 import build from './app';
-import { buildItemCategory, CATEGORIES } from './constants';
+import { CATEGORIES, buildItemCategory } from './constants';
 
 const itemTaskManager = new ItemTaskManager();
 const runner = new TaskRunner();

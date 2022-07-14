@@ -1,7 +1,7 @@
-// global
-import { Item } from 'graasp';
-import { sql, DatabaseTransactionConnection as TrxHandler } from 'slonik';
-// local
+import { DatabaseTransactionConnection as TrxHandler, sql } from 'slonik';
+
+import { Item } from '@graasp/sdk';
+
 import { Category } from './interfaces/category';
 import { CategoryType } from './interfaces/category-type';
 
@@ -82,7 +82,10 @@ export class CategoryService {
    * @param name name of new category type
    * @param dbHandler Database handler
    */
-  async createCategoryType(name: string, dbHandler: TrxHandler): Promise<CategoryType> {
+  async createCategoryType(
+    name: string,
+    dbHandler: TrxHandler,
+  ): Promise<CategoryType> {
     return dbHandler
       .query<CategoryType>(
         sql`
@@ -99,7 +102,10 @@ export class CategoryService {
    * @param id id of the category type to be deleted
    * @param dbHandler Database handler
    */
-   async deleteCategoryType(id: string, dbHandler: TrxHandler): Promise<CategoryType> {
+  async deleteCategoryType(
+    id: string,
+    dbHandler: TrxHandler,
+  ): Promise<CategoryType> {
     return dbHandler
       .query<CategoryType>(
         sql`
@@ -111,12 +117,16 @@ export class CategoryService {
       .then(({ rows }) => rows[0]);
   }
 
-    /**
+  /**
    * Create a new category
    * @param name name of new category type
    * @param dbHandler Database handler
    */
-  async createCategory(name: string, categoryTypeId: string, dbHandler: TrxHandler): Promise<Category> {
+  async createCategory(
+    name: string,
+    categoryTypeId: string,
+    dbHandler: TrxHandler,
+  ): Promise<Category> {
     return dbHandler
       .query<Category>(
         sql`
@@ -133,7 +143,7 @@ export class CategoryService {
    * @param id id of the category to be deleted
    * @param dbHandler Database handler
    */
-   async deleteCategory(id: string, dbHandler: TrxHandler): Promise<Category> {
+  async deleteCategory(id: string, dbHandler: TrxHandler): Promise<Category> {
     return dbHandler
       .query<Category>(
         sql`
@@ -145,12 +155,16 @@ export class CategoryService {
       .then(({ rows }) => rows[0]);
   }
 
-  // Get itemCategories matching given category(s) (intersection)
-  async getItemsByCategories(
+  /**
+   * Get item ids having at least one of the given categories
+   * @param ids category ids an item should have
+   * @param dbHandler
+   * @returns object { id } of items with given categories
+   */
+  async getItemIdsByCategories(
     ids: string[],
     dbHandler: TrxHandler,
   ): Promise<Item[]> {
-    // This sql query first select item_ids that match given categories in each type, find the intersection of item_ids by inner join, and lastly get items by ids
     return dbHandler
       .query<Item>(
         sql`
@@ -159,6 +173,7 @@ export class CategoryService {
         WHERE category_id IN (${sql.join(ids, sql`, `)})
         GROUP BY item_id
         `,
-      ).then(({ rows }) => rows.slice(0));
+      )
+      .then(({ rows }) => rows.slice(0));
   }
 }

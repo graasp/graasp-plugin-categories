@@ -1,16 +1,15 @@
+import { StatusCodes } from 'http-status-codes';
+import { v4 } from 'uuid';
+
 import {
   ItemMembershipTaskManager,
   ItemTaskManager,
   TaskRunner,
 } from 'graasp-test';
-import { StatusCodes } from 'http-status-codes';
-import { v4 } from 'uuid';
+
 import plugin from '../src/adminPlugin';
 import build from './app';
-import {
-  CATEGORIES,
-  CATEGORY_TYPES,
-} from './constants';
+import { CATEGORIES, CATEGORY_TYPES } from './constants';
 
 const itemTaskManager = new ItemTaskManager();
 const runner = new TaskRunner();
@@ -52,9 +51,7 @@ describe('Admin Category Actions', () => {
         itemTaskManager,
       });
 
-      jest
-        .spyOn(runner, 'runSingle')
-        .mockImplementation(async () => true);
+      jest.spyOn(runner, 'runSingle').mockImplementation(async () => true);
 
       const res = await app.inject({
         method: 'POST',
@@ -137,9 +134,7 @@ describe('Admin Category Actions', () => {
         itemTaskManager,
       });
 
-      jest
-        .spyOn(runner, 'runSingle')
-        .mockImplementation(async () => true);
+      jest.spyOn(runner, 'runSingle').mockImplementation(async () => true);
 
       const res = await app.inject({
         method: 'POST',
@@ -158,9 +153,7 @@ describe('Admin Category Actions', () => {
         itemTaskManager,
       });
 
-      jest
-        .spyOn(runner, 'runSingle')
-        .mockImplementation(async () => true);
+      jest.spyOn(runner, 'runSingle').mockImplementation(async () => true);
 
       const res = await app.inject({
         method: 'POST',

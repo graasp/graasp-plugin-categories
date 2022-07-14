@@ -1,9 +1,8 @@
-// global
 import { FastifyPluginAsync } from 'fastify';
-import { Item, Member } from 'graasp';
+
+import { Item, Member } from '@graasp/sdk';
 import graaspPublicPlugin from 'graasp-plugin-public';
 
-// local
 import { CategoryService } from './db-service';
 import { ItemCategoryService } from './item-category-service';
 import common, {
@@ -76,11 +75,12 @@ const publicPlugin: FastifyPluginAsync = async (fastify) => {
   );
 
   // get published items in given categories
+  // category ids can be a single id or a combination of ids ('id1,id2')
   fastify.get<{ Querystring: { categoryId: string[] } }>(
     '/with-categories',
     { schema: getByCategories },
     async ({ query: { categoryId: categoryIds }, log }) => {
-      const t1 = categoryTaskManager.createGetItemsByCategoriesTask(
+      const t1 = categoryTaskManager.createGetItemIdsByCategoriesTask(
         graaspActor,
         categoryIds,
       );
@@ -89,7 +89,7 @@ const publicPlugin: FastifyPluginAsync = async (fastify) => {
       // todo: use filter out of deleted items?
       const t2 = iTM.createGetManyTask(graaspActor);
       t2.getInput = () => ({
-        itemIds: t1.result.map(({ id }) => id),
+        itemIds: t1.result,
       });
 
       // filter out to keep parent published items only
