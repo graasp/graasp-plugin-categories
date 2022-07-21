@@ -4,9 +4,9 @@ import { v4 } from 'uuid';
 import {
   ItemMembershipTaskManager,
   ItemTaskManager,
+  Task as MockTask,
   TaskRunner,
 } from 'graasp-test';
-import MockTask from 'graasp-test/src/tasks/task';
 
 import plugin from '../src/service-api';
 import build from './app';

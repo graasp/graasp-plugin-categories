@@ -6,9 +6,9 @@ import { PublicItemTaskManager } from 'graasp-plugin-public';
 import {
   ItemMembershipTaskManager,
   ItemTaskManager,
+  Task as MockTask,
   TaskRunner,
 } from 'graasp-test';
-import MockTask from 'graasp-test/src/tasks/task';
 
 import plugin from '../src/publicPlugin';
 import build from './app';
