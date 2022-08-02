@@ -164,7 +164,7 @@ export class CategoryService {
   async getItemIdsByCategories(
     ids: string[],
     dbHandler: TrxHandler,
-  ): Promise<Item[]> {
+  ): Promise<Pick<Item, 'id'>[]> {
     return dbHandler
       .query<Item>(
         sql`
