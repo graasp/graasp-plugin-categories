@@ -1,20 +1,22 @@
+import { StatusCodes } from 'http-status-codes';
+import qs from 'qs';
+import { v4 } from 'uuid';
+
 import { PublicItemTaskManager } from 'graasp-plugin-public';
 import {
   ItemMembershipTaskManager,
   ItemTaskManager,
+  Task as MockTask,
   TaskRunner,
 } from 'graasp-test';
-import MockTask from 'graasp-test/src/tasks/task';
-import { StatusCodes } from 'http-status-codes';
-import qs from 'qs';
-import { v4 } from 'uuid';
+
 import plugin from '../src/publicPlugin';
 import build from './app';
 import {
-  buildItem,
-  buildItemCategory,
   CATEGORIES,
   CATEGORY_TYPES,
+  buildItem,
+  buildItemCategory,
 } from './constants';
 
 const itemTaskManager = new ItemTaskManager();

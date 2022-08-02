@@ -152,7 +152,7 @@ export const getByCategories = {
       categoryId: {
         type: 'array',
         items: {
-          $ref: 'http://graasp.org/categories/#/definitions/concatenatedIds'
+          $ref: 'http://graasp.org/categories/#/definitions/concatenatedIds',
         },
       },
     },

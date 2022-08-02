@@ -1,9 +1,9 @@
-// global
 import { FastifyLoggerInstance } from 'fastify';
-import { DatabaseTransactionHandler } from 'graasp';
+
+import { DatabaseTransactionHandler, TaskStatus } from '@graasp/sdk';
 // other services
-import { Member } from 'graasp';
-// local
+import { Member } from '@graasp/sdk';
+
 import { ItemCategory } from '../../interfaces/item-category';
 import { ItemCategoryService } from '../../item-category-service';
 import { BaseItemCategoryTask } from '../base-item-category-task';
@@ -31,7 +31,7 @@ export class CreateItemCategoryTask extends BaseItemCategoryTask<ItemCategory> {
     handler: DatabaseTransactionHandler,
     _log: FastifyLoggerInstance,
   ): Promise<void> {
-    this.status = 'RUNNING';
+    this.status = TaskStatus.RUNNING;
 
     // create entry in item-category
     const { itemId, categoryId } = this.input;
@@ -41,6 +41,6 @@ export class CreateItemCategoryTask extends BaseItemCategoryTask<ItemCategory> {
       categoryId,
       handler,
     );
-    this.status = 'OK';
+    this.status = TaskStatus.OK;
   }
 }

@@ -1,6 +1,5 @@
-// global
-import { DatabaseTransactionHandler, Member } from 'graasp';
-// local
+import { DatabaseTransactionHandler, Member, TaskStatus } from '@graasp/sdk';
+
 import { CategoryService } from '../../db-service';
 import { CategoryType } from '../../interfaces/category-type';
 import { BaseCategoryTask } from '../base-category-task';
@@ -15,12 +14,12 @@ export class GetCategoryTypesTask extends BaseCategoryTask<CategoryType[]> {
   }
 
   async run(handler: DatabaseTransactionHandler): Promise<void> {
-    this.status = 'RUNNING';
+    this.status = TaskStatus.RUNNING;
 
     // get all types
     const types = await this.categoryService.getCategoryTypes(handler);
 
-    this.status = 'OK';
+    this.status = TaskStatus.OK;
     this._result = types;
   }
 }
